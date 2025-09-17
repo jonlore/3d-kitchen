@@ -34,7 +34,7 @@ function recolorTargets(scene, color) {
 }
 
 function KitchenModel({ colorHex }) {
-  const { scene } = useGLTF("/models/kitchen.glb");
+  const { scene } = useGLTF(import.meta.env.BASE_URL + "/models/kitchen.glb");
   const color = useMemo(() => new THREE.Color(colorHex), [colorHex]);
 
   useEffect(() => {
