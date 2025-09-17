@@ -1,13 +1,12 @@
-import { Canvas } from "@react-three/fiber"
-import { useGLTF } from '@react-three/drei';
+import { Canvas } from "@react-three/fiber";
+import { useGLTF } from "@react-three/drei";
 import { OrbitControls } from "@react-three/drei";
 
-
 function KitchenModel() {
-    const {scene} = useGLTF('/models/kitchen.glb');
-    return <primitive object={scene} />;
+  const gltf = useGLTF("/models/kitchen.glb");
+  console.log("GLTF-modell:", gltf);
+  return <primitive object={gltf.scene} />;
 }
-
 
 export default function Model() {
   return (
