@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Sidebar from "./components/Sidebar";
-import Model from "./components/Model";
+import Sidebar from "./components/sidebar";
+import Model from "./components/model";
 import "./App.css";
 
 export default function App() {

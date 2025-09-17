@@ -45,7 +45,7 @@ export default function Sidebar({ colorHex, setColorHex }) {
                   width: 36,
                   height: 36,
                   borderRadius: "50%",
-                  border: selected ? "2px solid #111" : "1px solid #d1d5db",
+                  border: selected ? "1px solid #111" : "1px solid #d1d5db",
                   outline: "none",
                   background: c.hex,
                   cursor: "pointer",
