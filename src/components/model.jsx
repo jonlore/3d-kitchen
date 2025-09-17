@@ -1,22 +1,61 @@
+import { useEffect, useMemo } from "react";
 import { Canvas } from "@react-three/fiber";
-import { useGLTF } from "@react-three/drei";
-import { OrbitControls } from "@react-three/drei";
+import { OrbitControls, useGLTF } from "@react-three/drei";
+import * as THREE from "three";
 
-function KitchenModel() {
-  const gltf = useGLTF("/models/kitchen.glb");
-  console.log("GLTF-modell:", gltf);
-  return <primitive object={gltf.scene} />;
+const TARGET_PARTS = [
+  "luckor",
+  "luckor001",
+  "luckor002",
+  "Stomme",
+  "Stomme001",
+  // "Bänkskiva",
+  // "Bänksikva_ö",
+  "Kylskåp",
+  // "vinkyl",
+  "Ö",
+  // "Golv", //
+];
+
+function recolorTargets(scene, color) {
+  TARGET_PARTS.forEach((name) => {
+    const mesh = scene.getObjectByName(name);
+    if (mesh && mesh.isMesh) {
+      const newMat = new THREE.MeshStandardMaterial({
+        color,
+        metalness: 0.1,
+        roughness: 0.6,
+      });
+      newMat.name = `Override_${name}`;
+      mesh.material = newMat;
+      mesh.material.needsUpdate = true;
+    }
+  });
 }
 
-export default function Model() {
+function KitchenModel({ colorHex }) {
+  const { scene } = useGLTF("/models/kitchen.glb");
+  const color = useMemo(() => new THREE.Color(colorHex), [colorHex]);
+
+  useEffect(() => {
+    if (!scene) return;
+    recolorTargets(scene, color);
+  }, [scene, color]);
+
+  return <primitive object={scene} />;
+}
+
+export default function Model({ colorHex }) {
   return (
-    <div id="configurator-model">
-      <Canvas camera={{ position: [-10, 10, 10], fov: 100 }}>
-        <ambientLight intensity={0.5} />
-        <directionalLight position={[10, 5, 5]} intensity={1} />
-        <KitchenModel />
-        <OrbitControls />
+    <div id="configurator-model" style={{ width: "100%", height: "100%" }}>
+      <Canvas camera={{ position: [-10, 10, 10], fov: 60 }}>
+        <ambientLight intensity={0.6} />
+        <directionalLight position={[10, 8, 6]} intensity={1} />
+        <KitchenModel colorHex={colorHex} />
+        <OrbitControls enableDamping />
       </Canvas>
     </div>
   );
 }
+
+useGLTF.preload("/models/kitchen.glb");

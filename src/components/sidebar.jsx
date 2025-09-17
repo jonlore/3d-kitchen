@@ -1,39 +1,60 @@
-import { useState } from "react"
+export default function Sidebar({ colorHex, setColorHex }) {
+  const colors = [
+    { name: "Green", hex: "#6BAA75" },
+    { name: "Beige", hex: "#D9C7A1" },
+    { name: "Yellow", hex: "#E6C94C" },
+    { name: "White", hex: "#FFFFFF" },
+    { name: "Black", hex: "#111111" },
+  ];
 
-export default function Sidebar() {
-    const [colors, setColors] = useState(["Green", "Beige", "Yellow", "White", "Black"]);
-    const [materials, setMaterials] = useState(["material1", "material2", "material3"]);
+  return (
+    <div
+      id="sidebar"
+      style={{
+        padding: 16,
+        borderLeft: "1px solid #e5e7eb",
+        overflow: "auto",
+      }}
+    >
+      <header style={{ marginBottom: 16 }}>
+        <h1 style={{ fontSize: 18, lineHeight: 1.2, margin: 0 }}>
+          Start design your dream kitchen!
+        </h1>
+      </header>
 
-    return (
-        <>
-            <div id='sidebar'> 
-                <header>
-                    <h1>Start design your dream kitchen!</h1>
-                </header>
-                <div id='color-options'>
-                    <p>Color</p>
-                    <div id="colors">
-                        {colors.map(color => 
-                            <div key={color}>
-                                <div className={`circle-option ${color.toLowerCase()}`} id={`color-${color.toLowerCase()}`}></div>
-                                <span>{color}</span>
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                <div id='material-options'>
-                    <p>Material</p>
-                    <div id="materials">
-                        {materials.map(material => 
-                            <div key={material}>
-                                <div className={`material-option ${material.toLowerCase()}`} id={`material-${material.toLowerCase()}`}></div>
-                                <span>{material}</span>
-                            </div>
-                        )}
-                    </div>
-                </div>
-            </div>
-        </>
-    )
+      {/* Färgval – byter färg på ALLA valda delar samtidigt */}
+      <div id="color-options" style={{ marginBottom: 24 }}>
+        <p style={{ fontWeight: 600, margin: "0 0 8px" }}>Color</p>
+        <div
+          id="colors"
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(4, 1fr)",
+            gap: 10,
+          }}
+        >
+          {colors.map((c) => {
+            const selected = colorHex.toLowerCase() === c.hex.toLowerCase();
+            return (
+              <button
+                key={c.name}
+                onClick={() => setColorHex(c.hex)}
+                title={`${c.name} (${c.hex})`}
+                aria-label={`${c.name} (${c.hex})`}
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: "50%",
+                  border: selected ? "2px solid #111" : "1px solid #d1d5db",
+                  outline: "none",
+                  background: c.hex,
+                  cursor: "pointer",
+                }}
+              />
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
 }
