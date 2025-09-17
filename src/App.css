@@ -4,24 +4,23 @@
 
 body {
   margin: 0;
-  height: 100%; /* Make body take full height of viewport */
+  height: 100%;
 }
 
 main {
   display: flex;
-  height: 100vh; /* Fill entire viewport */
+  height: 100vh; 
 }
 
 #configurator-model {
-  flex: 1; /* Take up remaining space */
-  background: #cfcfcf; /* Just for visibility, optional */
+  flex: 1; 
+  background: #cfcfcf; 
 }
 
 #sidebar {
   flex: 0 0 25%;
-  max-width: 400px;
-  min-width: 200px;
-  background: #ffffff; /* Optional: visual separation */
+  width: 400px;
+  background: #ffffff;
   outline: 1px solid grey;
 }
 
@@ -31,3 +30,65 @@ main {
   padding: 1rem;
   border-bottom: 1px solid grey;
 }
+
+
+/* Color options */
+
+#colors {
+  display: flex;
+  gap: 1rem;           
+  flex-wrap: wrap;  
+  padding: 1rem;
+}
+
+#colors > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.circle-option {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid #8d8d8d;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+}
+
+
+.circle-option.green { background-color: green; }
+.circle-option.yellow { background-color: yellow; }
+.circle-option.beige { background-color: beige; }
+.circle-option.white { background-color: white; }
+.circle-option.black { background-color: black; }
+
+
+/* Material options */
+#materials {
+  display: flex;
+  gap: 1rem;           
+  flex-wrap: wrap;  
+  padding: 1rem;
+}
+
+#materials > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+.material-option {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid #8d8d8d;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+}
+
+
+.material-option.material1 { background-color: rgb(235, 235, 108); }
+.material-option.material2 { background-color: rgb(190, 249, 154); }
+.material-option.material3 { background-color: rgb(151, 253, 255); }
