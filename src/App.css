@@ -9,17 +9,16 @@ body {
 
 main {
   display: flex;
-  height: 100vh; 
+  height: 100vh;
 }
 
 #configurator-model {
-  flex: 1; 
-  background: #cfcfcf; 
+  flex: 1;
+  background: #cfcfcf;
 }
 
 #sidebar {
   flex: 0 0 25%;
-  width: 400px;
   background: #ffffff;
   outline: 1px solid grey;
 }
@@ -31,13 +30,12 @@ main {
   border-bottom: 1px solid grey;
 }
 
-
 /* Color options */
 
 #colors {
   display: flex;
-  gap: 1rem;           
-  flex-wrap: wrap;  
+  gap: 1rem;
+  flex-wrap: wrap;
   padding: 1rem;
 }
 
@@ -56,19 +54,27 @@ main {
   cursor: pointer;
 }
 
-
-.circle-option.green { background-color: green; }
-.circle-option.yellow { background-color: yellow; }
-.circle-option.beige { background-color: beige; }
-.circle-option.white { background-color: white; }
-.circle-option.black { background-color: black; }
-
+.circle-option.green {
+  background-color: green;
+}
+.circle-option.yellow {
+  background-color: yellow;
+}
+.circle-option.beige {
+  background-color: beige;
+}
+.circle-option.white {
+  background-color: white;
+}
+.circle-option.black {
+  background-color: black;
+}
 
 /* Material options */
 #materials {
   display: flex;
-  gap: 1rem;           
-  flex-wrap: wrap;  
+  gap: 1rem;
+  flex-wrap: wrap;
   padding: 1rem;
 }
 
@@ -77,7 +83,6 @@ main {
   flex-direction: column;
   align-items: center;
 }
-
 
 .material-option {
   width: 48px;
@@ -88,7 +93,12 @@ main {
   cursor: pointer;
 }
 
-
-.material-option.material1 { background-color: rgb(235, 235, 108); }
-.material-option.material2 { background-color: rgb(190, 249, 154); }
-.material-option.material3 { background-color: rgb(151, 253, 255); }
+.material-option.material1 {
+  background-color: rgb(235, 235, 108);
+}
+.material-option.material2 {
+  background-color: rgb(190, 249, 154);
+}
+.material-option.material3 {
+  background-color: rgb(151, 253, 255);
+}
