@@ -20,9 +20,9 @@ export default function Sidebar({
         "repeating-linear-gradient(45deg, #e5e7eb, #e5e7eb 6px, #d1d5db 6px, #d1d5db 12px)",
     },
     {
-      name: "Dark Brown (Color.004)",
-      key: "Color.004",
-      preview: "#4b2e2b",
+      name: "Ash Wood",
+      key: "Ash Wood",
+      preview: "#693b36",
     },
   ];
 
