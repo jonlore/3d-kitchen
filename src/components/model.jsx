@@ -39,6 +39,7 @@ function KitchenModel({ colorHex }) {
 
   useEffect(() => {
     if (!scene) return;
+    console.log("GLB object:", scene);
     recolorTargets(scene, color);
   }, [scene, color]);
 
@@ -57,5 +58,3 @@ export default function Model({ colorHex }) {
     </div>
   );
 }
-
-useGLTF.preload("/models/kitchen.glb");
