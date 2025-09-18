@@ -23,5 +23,3 @@ dist-ssr
 *.sln
 *.sw?
 
-# 3d-models
-*.glb
