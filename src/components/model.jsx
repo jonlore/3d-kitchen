@@ -106,7 +106,7 @@ function applyRawMaterialToCountertops(scene, materials, materialKey) {
 
 function KitchenModel({ colorHex, rawMaterial }) {
   const { scene, materials } = useGLTF(
-    import.meta.env.BASE_URL + "/models/Kitchen_test4.glb"
+    import.meta.env.BASE_URL + "/models/kitchennew.glb"
   );
   const color = useMemo(() => new THREE.Color(colorHex), [colorHex]);
 
