@@ -2,6 +2,8 @@ import { useEffect, useMemo } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
+import Sidebar from "./sidebar";
+import { useState } from "react";
 
 const TARGET_PARTS = [
   "luckor",
@@ -123,15 +125,25 @@ function KitchenModel({ colorHex, rawMaterial }) {
   return <primitive object={scene} />;
 }
 
-export default function Model({ colorHex, rawMaterial }) {
+export default function Model() {
+    const [colorHex, setColorHex] = useState("#6BAA75"); // startfärg
+    const [rawMaterial, setRawMaterial] = useState(null); // "Marble.001" | "Color.004" | null
   return (
-    <div id="configurator-model" style={{ width: "100%", height: "100%" }}>
-      <Canvas camera={{ position: [-10, 10, 10], fov: 60 }}>
+    <div id="configurator-model">
+
+      <Canvas camera={{ position: [2, 8, 10], fov: 70 }}>
         <ambientLight intensity={0.6} />
         <directionalLight position={[10, 8, 6]} intensity={1} />
         <KitchenModel colorHex={colorHex} rawMaterial={rawMaterial} />
         <OrbitControls enableDamping />
       </Canvas>
+      <Sidebar
+        colorHex={colorHex}
+        setColorHex={setColorHex}
+        rawMaterial={rawMaterial}
+        setRawMaterial={setRawMaterial}
+      />
+      
     </div>
   );
 }

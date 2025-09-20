@@ -27,85 +27,63 @@ export default function Sidebar({
   ];
 
   return (
-    <div
-      id="sidebar"
-      style={{
-        padding: 16,
-        borderLeft: "1px solid #e5e7eb",
-        overflow: "auto",
-      }}
-    >
-      <header style={{ marginBottom: 16 }}>
-        <h1 style={{ fontSize: 18, lineHeight: 1.2, margin: 0 }}>
+    <div id="sidebar">
+      <header>
+        <h1>
           Start design your dream kitchen!
         </h1>
       </header>
 
-      {/* Color (affects doors, frame, etc. — not the countertop) */}
-      <div id="color-options" style={{ marginBottom: 24 }}>
-        <p style={{ fontWeight: 600, margin: "0 0 8px" }}>Color</p>
-        <div
-          id="colors"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: 10,
-          }}
-        >
+
+      <div className="options-container" id="color-options">
+        <p className="option-title">Color</p>
+        <div id="colors">
           {colors.map((c) => {
             const selected = colorHex.toLowerCase() === c.hex.toLowerCase();
             return (
+              <div>
               <button
                 key={c.name}
                 onClick={() => setColorHex(c.hex)}
                 title={`${c.name} (${c.hex})`}
                 aria-label={`${c.name} (${c.hex})`}
+                className="circle-option"
                 style={{
-                  width: 36,
-                  height: 36,
-                  borderRadius: "50%",
                   border: selected ? "2px solid #111" : "1px solid #d1d5db",
-                  outline: "none",
                   background: c.hex,
-                  cursor: "pointer",
                 }}
               />
+              <span>{c.name}</span>
+              </div>
             );
           })}
         </div>
       </div>
 
       {/* Raw materials (countertop only) */}
-      <div id="raw-material-options" style={{ marginBottom: 24 }}>
-        <p style={{ fontWeight: 600, margin: "0 0 8px" }}>
-          Raw material (countertop)
+      <div className="options-container" id="raw-material-options">
+        <p className="option-title">
+          Raw material
         </p>
-        <div
-          id="raw-materials"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: 10,
-          }}
-        >
+        <div id="materials">
           {rawMaterials.map((m) => {
             const selected = rawMaterial === m.key;
             return (
+              <div>
               <button
                 key={m.key}
                 onClick={() => setRawMaterial(m.key)}
                 title={m.name}
                 aria-label={m.name}
+                className="circle-option"
                 style={{
-                  width: 36,
-                  height: 36,
-                  borderRadius: "50%",
                   border: selected ? "2px solid #111" : "1px solid #d1d5db",
                   outline: "none",
                   background: m.preview,
-                  cursor: "pointer",
                 }}
               />
+                <span>{m.name}</span>
+              </div>
             );
           })}
 
