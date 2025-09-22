@@ -4,6 +4,7 @@ import { OrbitControls, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import Sidebar from "./sidebar";
 import { Trash2, RotateCcw } from "lucide-react";
+
 const TARGET_PARTS = [
   "luckor",
   "luckor001",
@@ -29,6 +30,17 @@ function isCountertopLike(name = "") {
     n.includes("banskiva") ||
     n.includes("benkskiva") ||
     (n.includes("o_") && (n.includes("bank") || n.includes("bansk")))
+  );
+}
+
+function looksLikeHandle(name = "") {
+  const n = normalizeName(name);
+
+  return (
+    n.includes("handtag") ||
+    n.includes("handle") ||
+    n.includes("knopp") ||
+    n.includes("pull")
   );
 }
 
@@ -141,17 +153,45 @@ function applyRawMaterialDependingOnScope(
   }
 }
 
-function KitchenModel({ colorHex, rawMaterial, applyScope }) {
+function KitchenModel({ colorHex, rawMaterial, applyScope, handlesVisible }) {
   const { scene, materials } = useGLTF(
     import.meta.env.BASE_URL + "/models/Kitchen.glb"
   );
+  const handleMeshesRef = useRef([]);
 
   const color = useMemo(() => new THREE.Color(colorHex), [colorHex]);
 
   useEffect(() => {
+    if (!scene) return;
+    const out = [];
+    scene.traverse((obj) => {
+      if (obj.isMesh && obj.name && looksLikeHandle(obj.name)) {
+        out.push(obj);
+      }
+    });
+    handleMeshesRef.current = out;
+  }, [scene]);
+
+  // Show/hide handles
+  useEffect(() => {
+    handleMeshesRef.current.forEach((m) => {
+      m.visible = !!handlesVisible;
+      if (!m.material) {
+        m.material = new THREE.MeshStandardMaterial({
+          color: 0x333333,
+          metalness: 0.6,
+          roughness: 0.4,
+        });
+      }
+    });
+  }, [handlesVisible]);
+
+  useEffect(() => {
     if (!scene || !color) return;
-    paintTargets(scene, color);
-  }, [scene, color]);
+    if (applyScope === "colorTargets") {
+      paintTargets(scene, color);
+    }
+  }, [scene, color, applyScope]);
 
   useEffect(() => {
     if (!scene) return;
@@ -163,10 +203,29 @@ function KitchenModel({ colorHex, rawMaterial, applyScope }) {
         rawMaterial,
         applyScope
       );
-    } else {
+    } else if (applyScope === "colorTargets") {
       paintTargets(scene, color);
     }
   }, [scene, materials, rawMaterial, applyScope, color]);
+
+  useEffect(() => {
+    if (applyScope !== "handleOnly" || !colorHex) return;
+
+    handleMeshesRef.current.forEach((m) => {
+      if (m.material && !m.userData.__clonedMaterial) {
+        m.material = m.material.clone();
+        m.userData.__clonedMaterial = true;
+      }
+      if (!(m.material instanceof THREE.MeshStandardMaterial)) {
+        m.material = new THREE.MeshStandardMaterial({
+          metalness: 0.6,
+          roughness: 0.4,
+        });
+      }
+      m.material.color.set(colorHex);
+      m.material.needsUpdate = true;
+    });
+  }, [applyScope, colorHex]);
 
   return <primitive object={scene} />;
 }
@@ -175,6 +234,7 @@ export default function Model() {
   const [colorHex, setColorHex] = useState("#6BAA75");
   const [rawMaterial, setRawMaterial] = useState(null);
   const [applyScope, setApplyScope] = useState("colorTargets");
+  const [handlesVisible, setHandlesVisible] = useState(true); // NEW
 
   return (
     <div id="configurator-model">
@@ -195,6 +255,7 @@ export default function Model() {
           colorHex={colorHex}
           rawMaterial={rawMaterial}
           applyScope={applyScope}
+          handlesVisible={handlesVisible}
         />
         <OrbitControls enableDamping />
       </Canvas>
@@ -205,6 +266,8 @@ export default function Model() {
         rawMaterial={rawMaterial}
         setRawMaterial={setRawMaterial}
         setApplyScope={setApplyScope}
+        handlesVisible={handlesVisible}
+        setHandlesVisible={setHandlesVisible}
       />
     </div>
   );

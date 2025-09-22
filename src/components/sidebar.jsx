@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { ArrowRight, ArrowLeft, ChevronRight } from 'lucide-react';
+import { ArrowRight, ArrowLeft, ChevronRight } from "lucide-react";
 
 export default function Sidebar({
   colorHex,
@@ -7,6 +7,8 @@ export default function Sidebar({
   rawMaterial,
   setRawMaterial,
   setApplyScope,
+  handlesVisible,
+  setHandlesVisible,
 }) {
   const colors = [
     { name: "Green", hex: "#6BAA75" },
@@ -16,7 +18,6 @@ export default function Sidebar({
     { name: "Black", hex: "#111111" },
   ];
 
-  // Simple CSS previews for placeholders
   const PREVIEWS = {
     mahogny:
       "repeating-linear-gradient(45deg,#5a2a1f,#5a2a1f 6px,#6f3a2b 6px,#6f3a2b 12px)",
@@ -72,14 +73,17 @@ export default function Sidebar({
     return [];
   }, [currentView]);
 
-  // Handlers ----------------------------------------------------------
   function handlePickColor(hex) {
     setApplyScope?.("colorTargets");
     setColorHex(hex);
     setRawMaterial(null);
   }
 
-  // Raw material selection
+  function handlePickHandleColor(hex) {
+    setApplyScope?.("handleOnly");
+    setColorHex(hex);
+  }
+
   function handlePickRawMaterial(item) {
     if (currentView === "viewStart") {
       setApplyScope?.("colorTargets");
@@ -231,7 +235,21 @@ export default function Sidebar({
         <>
           <div className="options-container" id="handle-options">
             <p className="option-title">Handle type</p>
+
+            <label
+              htmlFor="toggle-handles"
+              style={{ display: "inline-flex", alignItems: "center", gap: 8 }}
+            >
+              <input
+                id="toggle-handles"
+                type="checkbox"
+                checked={!!handlesVisible}
+                onChange={(e) => setHandlesVisible?.(e.target.checked)}
+              />
+              Show handles
+            </label>
           </div>
+
           <div className="options-container" id="color-options">
             <p className="option-title">Handle Color</p>
             <div id="colors">
@@ -249,7 +267,7 @@ export default function Sidebar({
                     }}
                   >
                     <button
-                      onClick={() => handlePickColor(c.hex)}
+                      onClick={() => handlePickHandleColor(c.hex)}
                       title={`${c.name} (${c.hex})`}
                       aria-label={`${c.name} (${c.hex})`}
                       className="circle-option"
@@ -275,15 +293,20 @@ export default function Sidebar({
 
       {currentView == "viewFinal" && (
         <>
-
-        <div className="options-container">
-          <p className="option-title">Overview</p>
-          <ul className="overviewList">
-            <li>Color <span>Black</span></li>
-            <li>Material <span>Pine</span></li>
-            <li>Handle <span>Yellow</span></li>
-          </ul>
-        </div>
+          <div className="options-container">
+            <p className="option-title">Overview</p>
+            <ul className="overviewList">
+              <li>
+                Color <span>Black</span>
+              </li>
+              <li>
+                Material <span>Pine</span>
+              </li>
+              <li>
+                Handle <span>Yellow</span>
+              </li>
+            </ul>
+          </div>
         </>
       )}
 
@@ -297,7 +320,7 @@ export default function Sidebar({
             <span>Prev</span>
           </button>
         ) : (
-          <div style={{ width: "80px" }} /> // Empty space to maintain layout
+          <div style={{ width: "80px" }} />
         )}
 
         <div className="view-progress">
