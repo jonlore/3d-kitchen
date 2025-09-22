@@ -5,6 +5,9 @@ import * as THREE from "three";
 import Sidebar from "./sidebar";
 import { Trash2, RotateCcw } from "lucide-react";
 
+
+
+
 const TARGET_PARTS = [
   "luckor",
   "luckor001",
@@ -230,6 +233,7 @@ function KitchenModel({ colorHex, rawMaterial, applyScope, handlesVisible }) {
   return <primitive object={scene} />;
 }
 
+
 export default function Model() {
   const [colorHex, setColorHex] = useState("#6BAA75");
   const [rawMaterial, setRawMaterial] = useState(null);
@@ -248,9 +252,9 @@ export default function Model() {
         </button>
       </div>
 
-      <Canvas camera={{ position: [2, 8, 10], fov: 70 }}>
-        <ambientLight intensity={0.6} />
-        <directionalLight position={[10, 8, 6]} intensity={1} />
+      <Canvas camera={{ position: [0, 4, 9], fov: 70 }} style={{ background: '#d4e5fdff' }} >
+        <ambientLight intensity={0.5} />
+        <directionalLight position={[-16, 5, 16]} intensity={1.2} castShadow />
         <KitchenModel
           colorHex={colorHex}
           rawMaterial={rawMaterial}
