@@ -27,6 +27,35 @@ main {
   height: 100%;
 }
 
+#model-options {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 20px;
+  background-color: #fff;
+  z-index: 1;
+  display: flex;
+  gap: 10px;
+  border-radius: 8px;
+}
+
+#model-options button {
+  all: unset;              
+  background-color: white; 
+  cursor: pointer;        
+  width: 32px;             
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;      
+  transition: background-color 0.2s ease;
+}
+
+#model-options button:hover {
+  background-color: #efefef;
+}
+
 #sidebar {
   position: absolute;
   top: 0;
@@ -52,6 +81,8 @@ main {
   margin: 0;
   border-bottom: 1px solid rgb(174, 174, 174);
 }
+
+
 
 .option-title {
   color: #000;
@@ -118,12 +149,12 @@ main {
   cursor: not-allowed;
 }
 
-/* Add border to right of Prev button */
+
 .sidebar-navigation .prev-button {
   border-right: 1px solid #ccc;
 }
 
-/* Add border to left of Next button */
+
 .sidebar-navigation .next-button {
   border-left: 1px solid #ccc;
 }

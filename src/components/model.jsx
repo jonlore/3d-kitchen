@@ -3,7 +3,7 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import Sidebar from "./sidebar";
-
+import { Trash2, RotateCcw } from "lucide-react";
 const TARGET_PARTS = [
   "luckor",
   "luckor001",
@@ -178,6 +178,24 @@ export default function Model() {
 
   return (
     <div id="configurator-model">
+    <div id="model-options">
+        <button
+          className="restart"
+          onClick={() =>
+          alert("go back")
+          }>
+          <RotateCcw size={16} />
+        </button>
+
+        <button
+          className="restart"
+          onClick={() =>
+          alert("restart")
+          }>
+          <Trash2 size={16} />
+        </button>
+    </div>
+
       <Canvas camera={{ position: [2, 8, 10], fov: 70 }}>
         <ambientLight intensity={0.6} />
         <directionalLight position={[10, 8, 6]} intensity={1} />
