@@ -143,7 +143,7 @@ function applyRawMaterialDependingOnScope(
 
 function KitchenModel({ colorHex, rawMaterial, applyScope }) {
   const { scene, materials } = useGLTF(
-    import.meta.env.BASE_URL + "/models/kitchen3d.glb"
+    import.meta.env.BASE_URL + "/models/Kitchen.glb"
   );
 
   const color = useMemo(() => new THREE.Color(colorHex), [colorHex]);
@@ -178,23 +178,15 @@ export default function Model() {
 
   return (
     <div id="configurator-model">
-    <div id="model-options">
-        <button
-          className="restart"
-          onClick={() =>
-          alert("go back")
-          }>
+      <div id="model-options">
+        <button className="restart" onClick={() => alert("go back")}>
           <RotateCcw size={16} />
         </button>
 
-        <button
-          className="restart"
-          onClick={() =>
-          alert("restart")
-          }>
+        <button className="restart" onClick={() => alert("restart")}>
           <Trash2 size={16} />
         </button>
-    </div>
+      </div>
 
       <Canvas camera={{ position: [2, 8, 10], fov: 70 }}>
         <ambientLight intensity={0.6} />
