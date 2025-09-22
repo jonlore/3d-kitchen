@@ -229,8 +229,11 @@ export default function Sidebar({
 
       {currentView === "viewHandle" && (
         <>
+          <div className="options-container" id="handle-options">
+            <p className="option-title">Handle type</p>
+          </div>
           <div className="options-container" id="color-options">
-            <p className="option-title">Handle</p>
+            <p className="option-title">Handle Color</p>
             <div id="colors">
               {colors.map((c) => {
                 const selected =
