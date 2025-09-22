@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ArrowRight, ArrowLeft } from 'lucide-react';
 
 export default function Sidebar({
   colorHex,
@@ -174,23 +175,34 @@ export default function Sidebar({
         </>
       )}
 
-      <div className="navigation-buttons">
+      <div className="sidebar-navigation">
+        {currentViewIndex > 0 ? (
+          <button
+            className="prev-button"
+            onClick={() => setCurrentViewIndex((prev) => Math.max(prev - 1, 0))}
+          >
+            <ArrowLeft size={16} />
+            <span>Prev</span>
+          </button>
+        ) : (
+          <div style={{ width: "80px" }} /> // Empty space to maintain layout
+        )}
+
+        <div className="view-progress">
+          {currentViewIndex + 1} / {views.length}
+        </div>
+
         <button
-          onClick={() => setCurrentViewIndex((prev) => Math.max(prev - 1, 0))}
-          disabled={currentViewIndex === 0}
-        >
-          Previous
-        </button>
-        <button
+          className="next-button"
           onClick={() =>
             setCurrentViewIndex((prev) => Math.min(prev + 1, views.length - 1))
           }
           disabled={currentViewIndex === views.length - 1}
         >
-          Next
+          <span>Next</span>
+          <ArrowRight size={16} />
         </button>
       </div>
-
     </div>
   );
 }

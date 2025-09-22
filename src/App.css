@@ -89,3 +89,52 @@ main {
   margin-bottom: 0.5rem;
   cursor: pointer;
 }
+
+
+.sidebar-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+  height: 48px;
+  border-top: 1px solid #ddd; /* Optional separator */
+}
+
+.sidebar-navigation button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 0 16px;
+  height: 100%;
+  font-size: 16px;
+  cursor: pointer;
+  color: inherit;
+}
+
+.sidebar-navigation button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Add border to right of Prev button */
+.sidebar-navigation .prev-button {
+  border-right: 1px solid #ccc;
+}
+
+/* Add border to left of Next button */
+.sidebar-navigation .next-button {
+  border-left: 1px solid #ccc;
+}
+
+.view-progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 0 16px;
+  height: 100%;
+  min-width: 60px; /* optional for visual balance */
+}
