@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 export default function Sidebar({
   colorHex,
   setColorHex,
@@ -26,6 +28,8 @@ export default function Sidebar({
     },
   ];
 
+  const [currentView, setCurrentView] = useState("viewStart");
+
   return (
     <div id="sidebar">
       <header>
@@ -34,77 +38,104 @@ export default function Sidebar({
         </h1>
       </header>
 
+      {currentView == "viewStart" && (
+        <>
+        <div className="options-container" id="color-options">
+          <p className="option-title">Color</p>
+          <div id="colors">
+            {colors.map((c) => {
+              const selected = colorHex.toLowerCase() === c.hex.toLowerCase();
+              return (
+                <div>
+                  <button
+                    key={c.name}
+                    onClick={() => setColorHex(c.hex)}
+                    title={`${c.name} (${c.hex})`}
+                    aria-label={`${c.name} (${c.hex})`}
+                    className="circle-option"
+                    style={{
+                      border: selected ? "2px solid #111" : "1px solid #d1d5db",
+                      background: c.hex,
+                    }} />
+                  <span>{c.name}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div><div className="options-container" id="raw-material-options">
+            <p className="option-title">
+              Raw material
+            </p>
+            <div id="materials">
+              {rawMaterials.map((m) => {
+                const selected = rawMaterial === m.key;
+                return (
+                  <div>
+                    <button
+                      key={m.key}
+                      onClick={() => setRawMaterial(m.key)}
+                      title={m.name}
+                      aria-label={m.name}
+                      className="circle-option"
+                      style={{
+                        border: selected ? "2px solid #111" : "1px solid #d1d5db",
+                        outline: "none",
+                        background: m.preview,
+                      }} />
+                    <span>{m.name}</span>
+                  </div>
+                );
+              })}
 
-      <div className="options-container" id="color-options">
-        <p className="option-title">Color</p>
-        <div id="colors">
-          {colors.map((c) => {
-            const selected = colorHex.toLowerCase() === c.hex.toLowerCase();
-            return (
-              <div>
+              {/* Reset */}
               <button
-                key={c.name}
-                onClick={() => setColorHex(c.hex)}
-                title={`${c.name} (${c.hex})`}
-                aria-label={`${c.name} (${c.hex})`}
-                className="circle-option"
+                onClick={() => setRawMaterial(null)}
+                title="Reset countertop material"
+                aria-label="Reset countertop material"
                 style={{
-                  border: selected ? "2px solid #111" : "1px solid #d1d5db",
-                  background: c.hex,
+                  width: 36,
+                  height: 36,
+                  borderRadius: "50%",
+                  border: !rawMaterial ? "2px solid #111" : "1px solid #d1d5db",
+                  background: "#ffffff",
+                  cursor: "pointer",
                 }}
-              />
-              <span>{c.name}</span>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+              >
+                ⨯
+              </button>
+            </div>
+          </div>
+          </>
+      )}
+      
+      {currentView == "viewSurface" && (
+        <>
+          <div className="options-container" id="color-options">
+            <p className="option-title">Surface</p>
+            <div id="colors">
+              {colors.map((c) => {
+                const selected = colorHex.toLowerCase() === c.hex.toLowerCase();
+                return (
+                  <div>
+                    <button
+                      key={c.name}
+                      onClick={() => setColorHex(c.hex)}
+                      title={`${c.name} (${c.hex})`}
+                      aria-label={`${c.name} (${c.hex})`}
+                      className="circle-option"
+                      style={{
+                        border: selected ? "2px solid #111" : "1px solid #d1d5db",
+                        background: c.hex,
+                      }} />
+                    <span>{c.name}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </>
+      )}
 
-      {/* Raw materials (countertop only) */}
-      <div className="options-container" id="raw-material-options">
-        <p className="option-title">
-          Raw material
-        </p>
-        <div id="materials">
-          {rawMaterials.map((m) => {
-            const selected = rawMaterial === m.key;
-            return (
-              <div>
-              <button
-                key={m.key}
-                onClick={() => setRawMaterial(m.key)}
-                title={m.name}
-                aria-label={m.name}
-                className="circle-option"
-                style={{
-                  border: selected ? "2px solid #111" : "1px solid #d1d5db",
-                  outline: "none",
-                  background: m.preview,
-                }}
-              />
-                <span>{m.name}</span>
-              </div>
-            );
-          })}
-
-          {/* Reset */}
-          <button
-            onClick={() => setRawMaterial(null)}
-            title="Reset countertop material"
-            aria-label="Reset countertop material"
-            style={{
-              width: 36,
-              height: 36,
-              borderRadius: "50%",
-              border: !rawMaterial ? "2px solid #111" : "1px solid #d1d5db",
-              background: "#ffffff",
-              cursor: "pointer",
-            }}
-          >
-            ⨯
-          </button>
-        </div>
-      </div>
     </div>
   );
 }
