@@ -28,7 +28,9 @@ export default function Sidebar({
     },
   ];
 
-  const [currentView, setCurrentView] = useState("viewHandle");
+  const views = ["viewStart", "viewSurface", "viewHandle", "viewFinal"]
+  const [currentViewIndex, setCurrentViewIndex] = useState(0)
+  const currentView = views[currentViewIndex];
 
   return (
     <div id="sidebar">
@@ -163,6 +165,23 @@ export default function Sidebar({
           </div>
         </>
       )}
+
+      <div className="navigation-buttons">
+        <button
+          onClick={() => setCurrentViewIndex((prev) => Math.max(prev - 1, 0))}
+          disabled={currentViewIndex === 0}
+        >
+          Previous
+        </button>
+        <button
+          onClick={() =>
+            setCurrentViewIndex((prev) => Math.min(prev + 1, views.length - 1))
+          }
+          disabled={currentViewIndex === views.length - 1}
+        >
+          Next
+        </button>
+      </div>
 
     </div>
   );
