@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { ArrowRight, ArrowLeft } from 'lucide-react';
+import { ArrowRight, ArrowLeft } from "lucide-react";
 
 export default function Sidebar({
   colorHex,
@@ -177,10 +177,6 @@ export default function Sidebar({
                 );
               })}
             </div>
-            <p style={{ fontSize: 12, color: "#6b7280", marginTop: 6 }}>
-              Tip: In this step, materials apply to the same parts as the paint
-              (doors/frames/etc.).
-            </p>
           </div>
         </>
       )}
@@ -276,9 +272,9 @@ export default function Sidebar({
 
       {currentView == "viewFinal" && (
         <>
-        <div className="options-container">
-          <p className="option-title">Overview</p>
-        </div>
+          <div className="options-container">
+            <p className="option-title">Overview</p>
+          </div>
         </>
       )}
 
@@ -309,7 +305,7 @@ export default function Sidebar({
           <span>Next</span>
           <ArrowRight size={16} />
         </button>
-    </div>
+      </div>
     </div>
   );
 }
