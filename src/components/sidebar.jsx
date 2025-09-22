@@ -28,7 +28,7 @@ export default function Sidebar({
     },
   ];
 
-  const views = ["viewStart", "viewSurface", "viewHandle", "viewFinal"]
+  const views = ["viewLucka", "viewBankskiva", "viewHandtag", "viewFinal"]
   const [currentViewIndex, setCurrentViewIndex] = useState(0)
   const currentView = views[currentViewIndex];
 
@@ -40,7 +40,7 @@ export default function Sidebar({
         </h1>
       </header>
 
-      {currentView == "viewStart" && (
+      {currentView == "viewLucka" && (
         <>
         <div className="options-container" id="color-options">
           <p className="option-title">Color</p>
@@ -110,7 +110,7 @@ export default function Sidebar({
           </>
       )}
       
-      {currentView == "viewSurface" && (
+      {currentView == "viewBankskiva" && (
         <>
           <div className="options-container" id="color-options">
             <p className="option-title">Surface</p>
@@ -138,7 +138,7 @@ export default function Sidebar({
         </>
       )}
 
-      {currentView == "viewHandle" && (
+      {currentView == "viewHandtag" && (
         <>
           <div className="options-container" id="color-options">
             <p className="option-title">Handle</p>
@@ -163,6 +163,14 @@ export default function Sidebar({
               })}
             </div>
           </div>
+        </>
+      )}
+
+      {currentView == "viewFinal" && (
+        <>
+        <div className="options-container">
+          <p className="option-title">Overview</p>
+        </div>
         </>
       )}
 
