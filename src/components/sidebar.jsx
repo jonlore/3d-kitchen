@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { ArrowRight, ArrowLeft } from 'lucide-react';
 import { useState, useMemo } from "react";
 
 export default function Sidebar({
@@ -273,6 +275,32 @@ export default function Sidebar({
         </>
       )}
 
+      {currentView == "viewFinal" && (
+        <>
+        <div className="options-container">
+          <p className="option-title">Overview</p>
+        </div>
+        </>
+      )}
+
+      <div className="sidebar-navigation">
+        {currentViewIndex > 0 ? (
+          <button
+            className="prev-button"
+            onClick={() => setCurrentViewIndex((prev) => Math.max(prev - 1, 0))}
+          >
+            <ArrowLeft size={16} />
+            <span>Prev</span>
+          </button>
+        ) : (
+          <div style={{ width: "80px" }} /> // Empty space to maintain layout
+        )}
+
+        <div className="view-progress">
+          {currentViewIndex + 1} / {views.length}
+        </div>
+
+
       <div
         className="navigation-buttons"
         style={{ display: "flex", gap: 8, marginTop: 16 }}
@@ -283,13 +311,16 @@ export default function Sidebar({
         >
           Previous
         </button>
+
         <button
+          className="next-button"
           onClick={() =>
             setCurrentViewIndex((prev) => Math.min(prev + 1, views.length - 1))
           }
           disabled={currentViewIndex === views.length - 1}
         >
-          Next
+          <span>Next</span>
+          <ArrowRight size={16} />
         </button>
       </div>
     </div>
