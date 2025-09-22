@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
@@ -14,6 +14,7 @@ const TARGET_PARTS = [
   "Kylskåp",
   "Ö",
 ];
+
 function normalizeName(s = "") {
   return s
     .toLowerCase()
@@ -24,13 +25,12 @@ function normalizeName(s = "") {
 // Anything that looks like a countertop node name
 function isCountertopLike(name = "") {
   const n = normalizeName(name);
-
   return (
     n.includes("bankskiva") ||
     n.includes("banksikva") ||
     n.includes("banskiva") ||
     n.includes("benkskiva") ||
-    (n.includes("o_") && (n.includes("bank") || n.includes("bansk"))) //
+    (n.includes("o_") && (n.includes("bank") || n.includes("bansk")))
   );
 }
 
@@ -53,55 +53,94 @@ function recolorTargets(scene, color) {
 function findCountertopMeshes(scene) {
   const hits = [];
   scene.traverse((o) => {
-    if (o.isMesh && isCountertopLike(o.name)) {
-      hits.push(o);
-    }
+    if (o.isMesh && isCountertopLike(o.name)) hits.push(o);
   });
   return hits;
 }
 
-function applyRawMaterialToCountertops(scene, materials, materialKey) {
-  if (!materialKey) return;
+const FRIENDLY_TO_GLTF = {
+  marble: "Marble.001",
+  mahogny: "WoodFlooringMahoganyAfricanSanded001_COL_3K",
+  stone: "StoneMarbleCalacatta004_COL_3K",
+  // pine och cidar finns inte i .glb, kör placeholders
+};
 
-  const srcMat = materials?.[materialKey];
-  if (!srcMat) {
-    console.warn(
-      `[kitchen] Raw material "${materialKey}" not found. Available:`,
-      Object.keys(materials || {})
-    );
-    return;
+// Placeholder-material (enkla “lookalikes” tills riktiga texturer finns)
+function placeholderMaterialFor(key) {
+  const mat = new THREE.MeshStandardMaterial({
+    metalness: 0.05,
+    roughness: 0.6,
+  });
+  if (key === "mahogny") {
+    mat.color = new THREE.Color("#6b3a2b");
+    mat.name = "Placeholder_Mahogny";
+  } else if (key === "pine") {
+    mat.color = new THREE.Color("#e7d2aa");
+    mat.name = "Placeholder_Pine";
+  } else if (key === "cidar" /*cedar*/) {
+    mat.color = new THREE.Color("#b88a58");
+    mat.name = "Placeholder_Cedar";
+  } else if (key === "stone") {
+    mat.color = new THREE.Color("#c8c8c8");
+    mat.roughness = 0.9;
+    mat.metalness = 0.0;
+    mat.name = "Placeholder_Stone";
+  } else {
+    mat.color = new THREE.Color("#cccccc");
+    mat.name = `Placeholder_${key}`;
+  }
+  return mat;
+}
+
+function applyRawMaterialToCountertops(scene, materials, friendlyKey) {
+  if (!friendlyKey) return;
+
+  const gltfName = FRIENDLY_TO_GLTF[friendlyKey] || null;
+
+  let srcMaterial = null;
+  if (gltfName && materials?.[gltfName]) {
+    srcMaterial = materials[gltfName];
   }
 
   const targets = findCountertopMeshes(scene);
   if (targets.length === 0) {
-    console.warn(
-      "[kitchen] No countertop meshes found by name. Enable logs to verify mesh names."
-    );
+    console.warn("[kitchen] No countertop meshes found by name.");
   }
 
   targets.forEach((mesh) => {
-    const cloned = srcMat.clone();
-    cloned.name = `Raw_${materialKey}_for_${mesh.name}`;
-    if (cloned.roughness !== undefined) cloned.roughness = 0.5;
-    if (cloned.metalness !== undefined) cloned.metalness = 0.1;
+    const matToApply = srcMaterial
+      ? srcMaterial.clone()
+      : placeholderMaterialFor(friendlyKey);
+    if (matToApply.roughness !== undefined && !srcMaterial)
+      matToApply.roughness = 0.6;
+    if (matToApply.metalness !== undefined && !srcMaterial)
+      matToApply.metalness = 0.05;
 
-    mesh.material = cloned;
+    matToApply.name = srcMaterial
+      ? `Raw_${gltfName}_for_${mesh.name}`
+      : `Raw_${friendlyKey}_placeholder_for_${mesh.name}`;
+
+    mesh.material = matToApply;
     mesh.material.needsUpdate = true;
     mesh.needsUpdate = true;
   });
 
-  scene.traverse((o) => {
-    if (
-      o.isMesh &&
-      o.material?.name?.toLowerCase() === materialKey.toLowerCase()
-    ) {
-      o.material = o.material.clone();
-      o.material.needsUpdate = true;
-    }
-  });
+  if (gltfName) {
+    scene.traverse((o) => {
+      if (
+        o.isMesh &&
+        o.material?.name?.toLowerCase() === gltfName.toLowerCase()
+      ) {
+        o.material = o.material.clone();
+        o.material.needsUpdate = true;
+      }
+    });
+  }
 
   console.log(
-    `[kitchen] Applied raw material "${materialKey}" to:`,
+    `[kitchen] Applied raw material "${friendlyKey}" (${
+      gltfName || "placeholder"
+    }) to:`,
     targets.map((t) => t.name)
   );
 }
@@ -126,11 +165,11 @@ function KitchenModel({ colorHex, rawMaterial }) {
 }
 
 export default function Model() {
-    const [colorHex, setColorHex] = useState("#6BAA75"); // startfärg
-    const [rawMaterial, setRawMaterial] = useState(null); // "Marble.001" | "Color.004" | null
+  const [colorHex, setColorHex] = useState("#6BAA75");
+  const [rawMaterial, setRawMaterial] = useState(null);
+
   return (
     <div id="configurator-model">
-
       <Canvas camera={{ position: [2, 8, 10], fov: 70 }}>
         <ambientLight intensity={0.6} />
         <directionalLight position={[10, 8, 6]} intensity={1} />
@@ -143,7 +182,6 @@ export default function Model() {
         rawMaterial={rawMaterial}
         setRawMaterial={setRawMaterial}
       />
-      
     </div>
   );
 }
