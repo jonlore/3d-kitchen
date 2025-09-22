@@ -1,6 +1,5 @@
-import { useState } from "react";
-import { ArrowRight, ArrowLeft } from 'lucide-react';
 import { useState, useMemo } from "react";
+import { ArrowRight, ArrowLeft } from 'lucide-react';
 
 export default function Sidebar({
   colorHex,
@@ -300,18 +299,6 @@ export default function Sidebar({
           {currentViewIndex + 1} / {views.length}
         </div>
 
-
-      <div
-        className="navigation-buttons"
-        style={{ display: "flex", gap: 8, marginTop: 16 }}
-      >
-        <button
-          onClick={() => setCurrentViewIndex((prev) => Math.max(prev - 1, 0))}
-          disabled={currentViewIndex === 0}
-        >
-          Previous
-        </button>
-
         <button
           className="next-button"
           onClick={() =>
@@ -322,7 +309,7 @@ export default function Sidebar({
           <span>Next</span>
           <ArrowRight size={16} />
         </button>
-      </div>
+    </div>
     </div>
   );
 }

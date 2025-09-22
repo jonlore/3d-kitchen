@@ -143,7 +143,7 @@ function applyRawMaterialDependingOnScope(
 
 function KitchenModel({ colorHex, rawMaterial, applyScope }) {
   const { scene, materials } = useGLTF(
-    import.meta.env.BASE_URL + "/models/kitchennew.glb"
+    import.meta.env.BASE_URL + "/models/kitchen3d.glb"
   );
 
   const color = useMemo(() => new THREE.Color(colorHex), [colorHex]);
