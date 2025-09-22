@@ -28,46 +28,46 @@ export default function Sidebar({
     },
   ];
 
-  const views = ["viewStart", "viewSurface", "viewHandle", "viewFinal"]
-  const [currentViewIndex, setCurrentViewIndex] = useState(0)
+  const views = ["viewStart", "viewSurface", "viewHandle", "viewFinal"];
+  const [currentViewIndex, setCurrentViewIndex] = useState(0);
   const currentView = views[currentViewIndex];
 
   return (
     <div id="sidebar">
       <header>
-        <h1>
-          Start design your dream kitchen!
-        </h1>
+        <h1>Start design your dream kitchen!</h1>
       </header>
 
       {currentView == "viewStart" && (
         <>
-        <div className="options-container" id="color-options">
-          <p className="option-title">Color</p>
-          <div id="colors">
-            {colors.map((c) => {
-              const selected = colorHex.toLowerCase() === c.hex.toLowerCase();
-              return (
-                <div>
-                  <button
-                    key={c.name}
-                    onClick={() => setColorHex(c.hex)}
-                    title={`${c.name} (${c.hex})`}
-                    aria-label={`${c.name} (${c.hex})`}
-                    className="circle-option"
-                    style={{
-                      border: selected ? "2px solid #111" : "1px solid #d1d5db",
-                      background: c.hex,
-                    }} />
-                  <span>{c.name}</span>
-                </div>
-              );
-            })}
+          <div className="options-container" id="color-options">
+            <p className="option-title">Painted</p>
+            <div id="colors">
+              {colors.map((c) => {
+                const selected = colorHex.toLowerCase() === c.hex.toLowerCase();
+                return (
+                  <div>
+                    <button
+                      key={c.name}
+                      onClick={() => setColorHex(c.hex)}
+                      title={`${c.name} (${c.hex})`}
+                      aria-label={`${c.name} (${c.hex})`}
+                      className="circle-option"
+                      style={{
+                        border: selected
+                          ? "2px solid #111"
+                          : "1px solid #d1d5db",
+                        background: c.hex,
+                      }}
+                    />
+                    <span>{c.name}</span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </div><div className="options-container" id="raw-material-options">
-            <p className="option-title">
-              Raw material
-            </p>
+          <div className="options-container" id="raw-material-options">
+            <p className="option-title">Raw Material</p>
             <div id="materials">
               {rawMaterials.map((m) => {
                 const selected = rawMaterial === m.key;
@@ -80,10 +80,13 @@ export default function Sidebar({
                       aria-label={m.name}
                       className="circle-option"
                       style={{
-                        border: selected ? "2px solid #111" : "1px solid #d1d5db",
+                        border: selected
+                          ? "2px solid #111"
+                          : "1px solid #d1d5db",
                         outline: "none",
                         background: m.preview,
-                      }} />
+                      }}
+                    />
                     <span>{m.name}</span>
                   </div>
                 );
@@ -107,9 +110,9 @@ export default function Sidebar({
               </button>
             </div>
           </div>
-          </>
+        </>
       )}
-      
+
       {currentView == "viewSurface" && (
         <>
           <div className="options-container" id="color-options">
@@ -126,9 +129,12 @@ export default function Sidebar({
                       aria-label={`${c.name} (${c.hex})`}
                       className="circle-option"
                       style={{
-                        border: selected ? "2px solid #111" : "1px solid #d1d5db",
+                        border: selected
+                          ? "2px solid #111"
+                          : "1px solid #d1d5db",
                         background: c.hex,
-                      }} />
+                      }}
+                    />
                     <span>{c.name}</span>
                   </div>
                 );
@@ -154,9 +160,12 @@ export default function Sidebar({
                       aria-label={`${c.name} (${c.hex})`}
                       className="circle-option"
                       style={{
-                        border: selected ? "2px solid #111" : "1px solid #d1d5db",
+                        border: selected
+                          ? "2px solid #111"
+                          : "1px solid #d1d5db",
                         background: c.hex,
-                      }} />
+                      }}
+                    />
                     <span>{c.name}</span>
                   </div>
                 );
@@ -182,7 +191,6 @@ export default function Sidebar({
           Next
         </button>
       </div>
-
     </div>
   );
 }
