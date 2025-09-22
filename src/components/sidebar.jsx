@@ -65,8 +65,10 @@ export default function Sidebar({
     ],
   };
 
+
   const views = ["viewStart", "viewSurface", "viewHandle", "viewFinal"];
   const [currentViewIndex, setCurrentViewIndex] = useState(0);
+
   const currentView = views[currentViewIndex];
 
   const currentRawList = useMemo(() => {
@@ -81,7 +83,9 @@ export default function Sidebar({
         <h1>Start design your dream kitchen!</h1>
       </header>
 
+
       {currentView === "viewStart" && (
+
         <>
           <div className="options-container" id="color-options">
             <p className="option-title">Painted</p>
@@ -165,6 +169,7 @@ export default function Sidebar({
       )}
 
       {currentView === "viewSurface" && (
+
         <>
           <div className="options-container" id="color-options">
             <p className="option-title">Surface</p>
@@ -288,7 +293,7 @@ export default function Sidebar({
           </div>
         </>
       )}
-
+      
       <div
         className="navigation-buttons"
         style={{ display: "flex", gap: 8, marginTop: 16 }}
