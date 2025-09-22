@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { ArrowRight, ArrowLeft } from 'lucide-react';
+import { ArrowRight, ArrowLeft, ChevronRight } from 'lucide-react';
 
 export default function Sidebar({
   colorHex,
@@ -278,6 +278,11 @@ export default function Sidebar({
         <>
         <div className="options-container">
           <p className="option-title">Overview</p>
+          <ul className="overviewList">
+            <li>Color <span>Black</span></li>
+            <li>Material <span>Pine</span></li>
+            <li>Handle <span>Yellow</span></li>
+          </ul>
         </div>
         </>
       )}

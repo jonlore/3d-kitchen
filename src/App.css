@@ -68,7 +68,11 @@ main {
   border-radius: 8px;
   box-shadow: -6px 12px 17.9px 0 rgba(0, 0, 0, 0.14);
   overflow: auto;
+
+  display: flex;
+  flex-direction: column;
 }
+
 
 #sidebar h1 {
   color: #000;
@@ -84,6 +88,7 @@ main {
 
 
 
+
 .option-title {
   color: #000;
   font-size: 24px;
@@ -94,8 +99,26 @@ main {
 }
 
 
+
 .options-container {
   padding: 40px;
+}
+
+.overviewList {
+  list-style-type: none;
+  padding: 0;
+}
+
+.overviewList li {
+  border-bottom: 1px solid grey;
+  margin: 10px;
+}
+
+.overviewList span {
+  color: #000;
+  font-size: 20px;
+  font-weight: 600;
+  margin-left: 2rem;
 }
 
 /* Color options */
@@ -123,11 +146,12 @@ main {
 
 
 .sidebar-navigation {
+  margin-top: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0;
-  height: 48px;
+  min-height: 48px;
   border-top: 1px solid #ddd; /* Optional separator */
 }
 
