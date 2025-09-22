@@ -28,7 +28,7 @@ export default function Sidebar({
     },
   ];
 
-  const [currentView, setCurrentView] = useState("viewStart");
+  const [currentView, setCurrentView] = useState("viewHandle");
 
   return (
     <div id="sidebar">
@@ -112,6 +112,34 @@ export default function Sidebar({
         <>
           <div className="options-container" id="color-options">
             <p className="option-title">Surface</p>
+            <div id="colors">
+              {colors.map((c) => {
+                const selected = colorHex.toLowerCase() === c.hex.toLowerCase();
+                return (
+                  <div>
+                    <button
+                      key={c.name}
+                      onClick={() => setColorHex(c.hex)}
+                      title={`${c.name} (${c.hex})`}
+                      aria-label={`${c.name} (${c.hex})`}
+                      className="circle-option"
+                      style={{
+                        border: selected ? "2px solid #111" : "1px solid #d1d5db",
+                        background: c.hex,
+                      }} />
+                    <span>{c.name}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </>
+      )}
+
+      {currentView == "viewHandle" && (
+        <>
+          <div className="options-container" id="color-options">
+            <p className="option-title">Handle</p>
             <div id="colors">
               {colors.map((c) => {
                 const selected = colorHex.toLowerCase() === c.hex.toLowerCase();
