@@ -65,7 +65,6 @@ export default function Sidebar({
     ],
   };
 
-
   const views = ["viewStart", "viewSurface", "viewHandle", "viewFinal"];
   const [currentViewIndex, setCurrentViewIndex] = useState(0);
 
@@ -83,9 +82,7 @@ export default function Sidebar({
         <h1>Start design your dream kitchen!</h1>
       </header>
 
-
       {currentView === "viewStart" && (
-
         <>
           <div className="options-container" id="color-options">
             <p className="option-title">Painted</p>
@@ -169,48 +166,9 @@ export default function Sidebar({
       )}
 
       {currentView === "viewSurface" && (
-
         <>
-          <div className="options-container" id="color-options">
-            <p className="option-title">Surface</p>
-            <div id="colors">
-              {colors.map((c) => {
-                const selected = colorHex.toLowerCase() === c.hex.toLowerCase();
-                return (
-                  <div
-                    key={c.name}
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: 6,
-                      marginRight: 10,
-                    }}
-                  >
-                    <button
-                      onClick={() => setColorHex(c.hex)}
-                      title={`${c.name} (${c.hex})`}
-                      aria-label={`${c.name} (${c.hex})`}
-                      className="circle-option"
-                      style={{
-                        width: 36,
-                        height: 36,
-                        borderRadius: "50%",
-                        border: selected
-                          ? "2px solid #111"
-                          : "1px solid #d1d5db",
-                        background: c.hex,
-                        cursor: "pointer",
-                      }}
-                    />
-                    <span>{c.name}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
           <div className="options-container" id="surface-raw-materials">
-            <p className="option-title">Raw Material (surface)</p>
+            <p className="option-title">Material</p>
             <div
               id="materials"
               style={{ display: "flex", gap: 12, flexWrap: "wrap" }}
@@ -293,7 +251,7 @@ export default function Sidebar({
           </div>
         </>
       )}
-      
+
       <div
         className="navigation-buttons"
         style={{ display: "flex", gap: 8, marginTop: 16 }}
