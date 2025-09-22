@@ -155,7 +155,7 @@ function applyRawMaterialDependingOnScope(
 
 function KitchenModel({ colorHex, rawMaterial, applyScope, handlesVisible }) {
   const { scene, materials } = useGLTF(
-    import.meta.env.BASE_URL + "/models/Kitchen.glb"
+    import.meta.env.BASE_URL + "/models/kitchen3d.glb"
   );
   const handleMeshesRef = useRef([]);
 
