@@ -177,10 +177,6 @@ export default function Sidebar({
                 );
               })}
             </div>
-            <p style={{ fontSize: 12, color: "#6b7280", marginTop: 6 }}>
-              Tip: In this step, materials apply to the same parts as the paint
-              (doors/frames/etc.).
-            </p>
           </div>
         </>
       )}
@@ -233,8 +229,11 @@ export default function Sidebar({
 
       {currentView === "viewHandle" && (
         <>
+          <div className="options-container" id="handle-options">
+            <p className="option-title">Handle type</p>
+          </div>
           <div className="options-container" id="color-options">
-            <p className="option-title">Handle</p>
+            <p className="option-title">Handle Color</p>
             <div id="colors">
               {colors.map((c) => {
                 const selected =
@@ -276,6 +275,7 @@ export default function Sidebar({
 
       {currentView == "viewFinal" && (
         <>
+
         <div className="options-container">
           <p className="option-title">Overview</p>
           <ul className="overviewList">
@@ -314,7 +314,7 @@ export default function Sidebar({
           <span>Next</span>
           <ArrowRight size={16} />
         </button>
-    </div>
+      </div>
     </div>
   );
 }
