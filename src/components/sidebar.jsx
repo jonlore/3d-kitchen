@@ -5,6 +5,7 @@ export default function Sidebar({
   setColorHex,
   rawMaterial,
   setRawMaterial,
+  setApplyScope,
 }) {
   const colors = [
     { name: "Green", hex: "#6BAA75" },
@@ -14,27 +15,22 @@ export default function Sidebar({
     { name: "Black", hex: "#111111" },
   ];
 
-  // Enkla CSS-previews för placeholders (trä/sten-känsla)
+  // Simple CSS previews for placeholders
   const PREVIEWS = {
-    // wood-ish
     mahogny:
       "repeating-linear-gradient(45deg,#5a2a1f,#5a2a1f 6px,#6f3a2b 6px,#6f3a2b 12px)",
     pine: "repeating-linear-gradient(45deg,#e9d7b8,#e9d7b8 8px,#d7c19e 8px,#d7c19e 16px)",
     cidar:
       "repeating-linear-gradient(45deg,#c9a87a,#c9a87a 8px,#b99366 8px,#b99366 16px)",
-    // stone-ish
     stone:
       "repeating-linear-gradient(45deg,#cfcfcf,#cfcfcf 6px,#bdbdbd 6px,#bdbdbd 12px)",
   };
 
-  // Riktiga material som finns i GLB (vänlig nyckel -> glTF-materialnamn)
-  // I filen: Marble.001 (Bänkskiva), Ash Wood (Ö). "Stone"/"Mahogny"/"Pine"/"Cidar" saknas.
   const FRIENDLY_TO_GLTF = {
     marble: "Marble.001",
-    // mahogny: null,
-    // pine: null,
-    // cidar: null,
-    // stone: null,
+    mahogny: "WoodFlooringMahoganyAfricanSanded001_COL_3K",
+    stone: "StoneMarbleCalacatta004_COL_3K",
+    // cidar/pine are placeholders right now
   };
 
   const rawMaterialsByView = {
@@ -44,7 +40,7 @@ export default function Sidebar({
         label: "Mahogny",
         key: "mahogny",
         preview: PREVIEWS.mahogny,
-        gltf: "WoodFlooringMahoganyAfricanSanded001_COL_3K",
+        gltf: FRIENDLY_TO_GLTF.mahogny,
       },
       { label: "Pine", key: "pine", preview: PREVIEWS.pine, gltf: null },
     ],
@@ -54,20 +50,19 @@ export default function Sidebar({
         label: "Marble",
         key: "marble",
         preview: "#e5e7eb",
-        gltf: "Marble.001",
+        gltf: FRIENDLY_TO_GLTF.marble,
       },
       {
         label: "Stone",
         key: "stone",
         preview: PREVIEWS.stone,
-        gltf: "StoneMarbleCalacatta004_COL_3K",
+        gltf: FRIENDLY_TO_GLTF.stone,
       },
     ],
   };
 
   const views = ["viewStart", "viewSurface", "viewHandle", "viewFinal"];
   const [currentViewIndex, setCurrentViewIndex] = useState(0);
-
   const currentView = views[currentViewIndex];
 
   const currentRawList = useMemo(() => {
@@ -75,6 +70,24 @@ export default function Sidebar({
     if (currentView === "viewSurface") return rawMaterialsByView.viewSurface;
     return [];
   }, [currentView]);
+
+  // Handlers ----------------------------------------------------------
+  function handlePickColor(hex) {
+    setApplyScope?.("colorTargets");
+    setColorHex(hex);
+    setRawMaterial(null);
+  }
+
+  // Raw material selection
+  function handlePickRawMaterial(item) {
+    if (currentView === "viewStart") {
+      setApplyScope?.("colorTargets");
+    } else if (currentView === "viewSurface") {
+      setApplyScope?.("surfaceOnly");
+    }
+    setRawMaterial(item.key);
+    setColorHex("");
+  }
 
   return (
     <div id="sidebar">
@@ -88,7 +101,8 @@ export default function Sidebar({
             <p className="option-title">Painted</p>
             <div id="colors">
               {colors.map((c) => {
-                const selected = colorHex.toLowerCase() === c.hex.toLowerCase();
+                const selected =
+                  colorHex?.toLowerCase() === c.hex.toLowerCase();
                 return (
                   <div
                     key={c.name}
@@ -100,7 +114,7 @@ export default function Sidebar({
                     }}
                   >
                     <button
-                      onClick={() => setColorHex(c.hex)}
+                      onClick={() => handlePickColor(c.hex)}
                       title={`${c.name} (${c.hex})`}
                       aria-label={`${c.name} (${c.hex})`}
                       className="circle-option"
@@ -140,7 +154,8 @@ export default function Sidebar({
                     }}
                   >
                     <button
-                      onClick={() => setRawMaterial(m.key)}
+                      data-gltf={m.gltf || ""}
+                      onClick={() => handlePickRawMaterial(m)}
                       title={m.label}
                       aria-label={m.label}
                       className="circle-option"
@@ -161,6 +176,10 @@ export default function Sidebar({
                 );
               })}
             </div>
+            <p style={{ fontSize: 12, color: "#6b7280", marginTop: 6 }}>
+              Tip: In this step, materials apply to the same parts as the paint
+              (doors/frames/etc.).
+            </p>
           </div>
         </>
       )}
@@ -185,7 +204,8 @@ export default function Sidebar({
                     }}
                   >
                     <button
-                      onClick={() => setRawMaterial(m.key)}
+                      data-gltf={m.gltf || ""}
+                      onClick={() => handlePickRawMaterial(m)}
                       title={m.label}
                       aria-label={m.label}
                       className="circle-option"
@@ -216,7 +236,8 @@ export default function Sidebar({
             <p className="option-title">Handle</p>
             <div id="colors">
               {colors.map((c) => {
-                const selected = colorHex.toLowerCase() === c.hex.toLowerCase();
+                const selected =
+                  colorHex?.toLowerCase() === c.hex.toLowerCase();
                 return (
                   <div
                     key={c.name}
@@ -228,7 +249,7 @@ export default function Sidebar({
                     }}
                   >
                     <button
-                      onClick={() => setColorHex(c.hex)}
+                      onClick={() => handlePickColor(c.hex)}
                       title={`${c.name} (${c.hex})`}
                       aria-label={`${c.name} (${c.hex})`}
                       className="circle-option"

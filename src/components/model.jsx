@@ -1,9 +1,8 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import Sidebar from "./sidebar";
-import { useState } from "react";
 
 const TARGET_PARTS = [
   "luckor",
@@ -22,7 +21,6 @@ function normalizeName(s = "") {
     .replace(/\p{Diacritic}/gu, "");
 }
 
-// Anything that looks like a countertop node name
 function isCountertopLike(name = "") {
   const n = normalizeName(name);
   return (
@@ -34,20 +32,13 @@ function isCountertopLike(name = "") {
   );
 }
 
-function recolorTargets(scene, color) {
-  TARGET_PARTS.forEach((name) => {
+function findMeshesByNames(scene, names) {
+  const hits = [];
+  names.forEach((name) => {
     const mesh = scene.getObjectByName(name);
-    if (mesh && mesh.isMesh) {
-      const newMat = new THREE.MeshStandardMaterial({
-        color,
-        metalness: 0.1,
-        roughness: 0.6,
-      });
-      newMat.name = `Override_${name}`;
-      mesh.material = newMat;
-      mesh.material.needsUpdate = true;
-    }
+    if (mesh && mesh.isMesh) hits.push(mesh);
   });
+  return hits;
 }
 
 function findCountertopMeshes(scene) {
@@ -62,10 +53,9 @@ const FRIENDLY_TO_GLTF = {
   marble: "Marble.001",
   mahogny: "WoodFlooringMahoganyAfricanSanded001_COL_3K",
   stone: "StoneMarbleCalacatta004_COL_3K",
-  // pine och cidar finns inte i .glb, kör placeholders
+  // pine / cidar not present in .glb — placeholders will be used
 };
 
-// Placeholder-material (enkla “lookalikes” tills riktiga texturer finns)
 function placeholderMaterialFor(key) {
   const mat = new THREE.MeshStandardMaterial({
     metalness: 0.05,
@@ -85,6 +75,11 @@ function placeholderMaterialFor(key) {
     mat.roughness = 0.9;
     mat.metalness = 0.0;
     mat.name = "Placeholder_Stone";
+  } else if (key === "marble") {
+    mat.color = new THREE.Color("#e5e7eb");
+    mat.roughness = 0.4;
+    mat.metalness = 0.05;
+    mat.name = "Placeholder_Marble";
   } else {
     mat.color = new THREE.Color("#cccccc");
     mat.name = `Placeholder_${key}`;
@@ -92,74 +87,86 @@ function placeholderMaterialFor(key) {
   return mat;
 }
 
-function applyRawMaterialToCountertops(scene, materials, friendlyKey) {
-  if (!friendlyKey) return;
+function paintTargets(scene, color) {
+  const targets = findMeshesByNames(scene, TARGET_PARTS);
+  targets.forEach((mesh) => {
+    const newMat = new THREE.MeshStandardMaterial({
+      color,
+      metalness: 0.1,
+      roughness: 0.6,
+    });
+    newMat.name = `Paint_${mesh.name}`;
+    mesh.material = newMat;
+    mesh.material.needsUpdate = true;
+  });
+}
 
+function applyRawMaterialToMeshes(meshes, materials, friendlyKey) {
+  if (!friendlyKey) return;
   const gltfName = FRIENDLY_TO_GLTF[friendlyKey] || null;
 
-  let srcMaterial = null;
-  if (gltfName && materials?.[gltfName]) {
-    srcMaterial = materials[gltfName];
-  }
+  let sourceMat =
+    gltfName && materials?.[gltfName] ? materials[gltfName] : null;
 
-  const targets = findCountertopMeshes(scene);
-  if (targets.length === 0) {
-    console.warn("[kitchen] No countertop meshes found by name.");
-  }
-
-  targets.forEach((mesh) => {
-    const matToApply = srcMaterial
-      ? srcMaterial.clone()
+  meshes.forEach((mesh) => {
+    const matToApply = sourceMat
+      ? sourceMat.clone()
       : placeholderMaterialFor(friendlyKey);
-    if (matToApply.roughness !== undefined && !srcMaterial)
-      matToApply.roughness = 0.6;
-    if (matToApply.metalness !== undefined && !srcMaterial)
-      matToApply.metalness = 0.05;
-
-    matToApply.name = srcMaterial
+    if (!sourceMat) {
+      if (matToApply.roughness !== undefined) matToApply.roughness = 0.6;
+      if (matToApply.metalness !== undefined) matToApply.metalness = 0.05;
+    }
+    matToApply.name = sourceMat
       ? `Raw_${gltfName}_for_${mesh.name}`
       : `Raw_${friendlyKey}_placeholder_for_${mesh.name}`;
-
     mesh.material = matToApply;
     mesh.material.needsUpdate = true;
     mesh.needsUpdate = true;
   });
-
-  if (gltfName) {
-    scene.traverse((o) => {
-      if (
-        o.isMesh &&
-        o.material?.name?.toLowerCase() === gltfName.toLowerCase()
-      ) {
-        o.material = o.material.clone();
-        o.material.needsUpdate = true;
-      }
-    });
-  }
-
-  console.log(
-    `[kitchen] Applied raw material "${friendlyKey}" (${
-      gltfName || "placeholder"
-    }) to:`,
-    targets.map((t) => t.name)
-  );
 }
 
-function KitchenModel({ colorHex, rawMaterial }) {
+function applyRawMaterialDependingOnScope(
+  scene,
+  materials,
+  friendlyKey,
+  scope
+) {
+  if (!scene || !friendlyKey) return;
+  if (scope === "colorTargets") {
+    const targets = findMeshesByNames(scene, TARGET_PARTS);
+    applyRawMaterialToMeshes(targets, materials, friendlyKey);
+  } else if (scope === "surfaceOnly") {
+    const countertops = findCountertopMeshes(scene);
+    applyRawMaterialToMeshes(countertops, materials, friendlyKey);
+  }
+}
+
+function KitchenModel({ colorHex, rawMaterial, applyScope }) {
   const { scene, materials } = useGLTF(
     import.meta.env.BASE_URL + "/models/kitchennew.glb"
   );
+
   const color = useMemo(() => new THREE.Color(colorHex), [colorHex]);
 
   useEffect(() => {
-    if (!scene) return;
-    recolorTargets(scene, color);
+    if (!scene || !color) return;
+    paintTargets(scene, color);
   }, [scene, color]);
 
   useEffect(() => {
     if (!scene) return;
-    applyRawMaterialToCountertops(scene, materials, rawMaterial);
-  }, [scene, materials, rawMaterial]);
+
+    if (rawMaterial) {
+      applyRawMaterialDependingOnScope(
+        scene,
+        materials,
+        rawMaterial,
+        applyScope
+      );
+    } else {
+      paintTargets(scene, color);
+    }
+  }, [scene, materials, rawMaterial, applyScope, color]);
 
   return <primitive object={scene} />;
 }
@@ -167,20 +174,27 @@ function KitchenModel({ colorHex, rawMaterial }) {
 export default function Model() {
   const [colorHex, setColorHex] = useState("#6BAA75");
   const [rawMaterial, setRawMaterial] = useState(null);
+  const [applyScope, setApplyScope] = useState("colorTargets");
 
   return (
     <div id="configurator-model">
       <Canvas camera={{ position: [2, 8, 10], fov: 70 }}>
         <ambientLight intensity={0.6} />
         <directionalLight position={[10, 8, 6]} intensity={1} />
-        <KitchenModel colorHex={colorHex} rawMaterial={rawMaterial} />
+        <KitchenModel
+          colorHex={colorHex}
+          rawMaterial={rawMaterial}
+          applyScope={applyScope}
+        />
         <OrbitControls enableDamping />
       </Canvas>
+
       <Sidebar
         colorHex={colorHex}
         setColorHex={setColorHex}
         rawMaterial={rawMaterial}
         setRawMaterial={setRawMaterial}
+        setApplyScope={setApplyScope}
       />
     </div>
   );
