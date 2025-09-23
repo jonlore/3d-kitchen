@@ -156,13 +156,14 @@ function applyRawMaterialDependingOnScope(
   }
 }
 
-function KitchenModel({ colorHex, rawMaterial, applyScope, handlesVisible }) {
+function KitchenModel({ cabinetColorHex, handleColorHex, rawMaterial, applyScope, handlesVisible }) {
   const { scene, materials } = useGLTF(
     import.meta.env.BASE_URL + "/models/kitchen3d.glb"
   );
   const handleMeshesRef = useRef([]);
 
-  const color = useMemo(() => new THREE.Color(colorHex), [colorHex]);
+  const cabinetColor = useMemo(() => new THREE.Color(cabinetColorHex), [cabinetColorHex]);
+  const handleColor = useMemo(() => new THREE.Color(handleColorHex), [handleColorHex]);
 
   useEffect(() => {
     if (!scene) return;
@@ -189,46 +190,48 @@ function KitchenModel({ colorHex, rawMaterial, applyScope, handlesVisible }) {
     });
   }, [handlesVisible]);
 
+useEffect(() => {
+  if (!scene || !cabinetColor) return;
+  if (applyScope === "colorTargets") {
+    paintTargets(scene, cabinetColor);
+  }
+}, [scene, cabinetColor, applyScope]);
+
+useEffect(() => {
+  if (!scene) return;
+
+  if (rawMaterial) {
+    applyRawMaterialDependingOnScope(
+      scene,
+      materials,
+      rawMaterial,
+      applyScope
+    );
+  } else if (applyScope === "colorTargets") {
+    paintTargets(scene, cabinetColor);
+  }
+}, [scene, materials, rawMaterial, applyScope, cabinetColor]);
+
+
   useEffect(() => {
-    if (!scene || !color) return;
-    if (applyScope === "colorTargets") {
-      paintTargets(scene, color);
+  if (applyScope !== "handleOnly" || !handleColorHex) return;
+
+  handleMeshesRef.current.forEach((m) => {
+    if (m.material && !m.userData.__clonedMaterial) {
+      m.material = m.material.clone();
+      m.userData.__clonedMaterial = true;
     }
-  }, [scene, color, applyScope]);
-
-  useEffect(() => {
-    if (!scene) return;
-
-    if (rawMaterial) {
-      applyRawMaterialDependingOnScope(
-        scene,
-        materials,
-        rawMaterial,
-        applyScope
-      );
-    } else if (applyScope === "colorTargets") {
-      paintTargets(scene, color);
+    if (!(m.material instanceof THREE.MeshStandardMaterial)) {
+      m.material = new THREE.MeshStandardMaterial({
+        metalness: 0.6,
+        roughness: 0.4,
+      });
     }
-  }, [scene, materials, rawMaterial, applyScope, color]);
+    m.material.color.set(handleColor);
+    m.material.needsUpdate = true;
+  });
+  }, [applyScope, handleColorHex, handleColor]);
 
-  useEffect(() => {
-    if (applyScope !== "handleOnly" || !colorHex) return;
-
-    handleMeshesRef.current.forEach((m) => {
-      if (m.material && !m.userData.__clonedMaterial) {
-        m.material = m.material.clone();
-        m.userData.__clonedMaterial = true;
-      }
-      if (!(m.material instanceof THREE.MeshStandardMaterial)) {
-        m.material = new THREE.MeshStandardMaterial({
-          metalness: 0.6,
-          roughness: 0.4,
-        });
-      }
-      m.material.color.set(colorHex);
-      m.material.needsUpdate = true;
-    });
-  }, [applyScope, colorHex]);
 
   return <primitive object={scene} />;
 }
@@ -238,7 +241,11 @@ export default function Model() {
   const [colorHex, setColorHex] = useState("#6BAA75");
   const [rawMaterial, setRawMaterial] = useState(null);
   const [applyScope, setApplyScope] = useState("colorTargets");
-  const [handlesVisible, setHandlesVisible] = useState(true); // NEW
+  const [handlesVisible, setHandlesVisible] = useState(true); 
+
+  const [cabinetColorHex, setCabinetColorHex] = useState("#6BAA75");
+  const [handleColorHex, setHandleColorHex] = useState("#E6C94C"); // default handle color
+
 
   return (
     <div id="configurator-model">
@@ -256,7 +263,9 @@ export default function Model() {
         <ambientLight intensity={0.5} />
         <directionalLight position={[-16, 5, 16]} intensity={1.2} castShadow />
         <KitchenModel
-          colorHex={colorHex}
+          cabinetColorHex={cabinetColorHex}
+          handleColorHex={handleColorHex}
+
           rawMaterial={rawMaterial}
           applyScope={applyScope}
           handlesVisible={handlesVisible}
@@ -265,14 +274,18 @@ export default function Model() {
       </Canvas>
 
       <Sidebar
-        colorHex={colorHex}
-        setColorHex={setColorHex}
+        cabinetColorHex={cabinetColorHex}
+        setCabinetColorHex={setCabinetColorHex}
+        handleColorHex={handleColorHex}
+        setHandleColorHex={setHandleColorHex}
+
         rawMaterial={rawMaterial}
         setRawMaterial={setRawMaterial}
         setApplyScope={setApplyScope}
         handlesVisible={handlesVisible}
         setHandlesVisible={setHandlesVisible}
       />
+
     </div>
   );
 }

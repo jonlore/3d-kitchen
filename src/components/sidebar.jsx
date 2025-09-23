@@ -2,8 +2,10 @@ import { useState, useMemo } from "react";
 import { ArrowRight, ArrowLeft, ChevronRight } from "lucide-react";
 
 export default function Sidebar({
-  colorHex,
-  setColorHex,
+  cabinetColorHex,
+  setCabinetColorHex,
+  handleColorHex,
+  setHandleColorHex,
   rawMaterial,
   setRawMaterial,
   setApplyScope,
@@ -75,14 +77,14 @@ export default function Sidebar({
 
   function handlePickColor(hex) {
     setApplyScope?.("colorTargets");
-    setColorHex(hex);
+    setCabinetColorHex(hex);
     setRawMaterial(null);
   }
 
   function handlePickHandleColor(hex) {
     setApplyScope?.("handleOnly");
-    setColorHex(hex);
-  }
+    setHandleColorHex(hex);
+  } 
 
   function handlePickRawMaterial(item) {
     if (currentView === "viewStart") {
@@ -106,8 +108,7 @@ export default function Sidebar({
             <p className="option-title">Painted</p>
             <div id="colors">
               {colors.map((c) => {
-                const selected =
-                  colorHex?.toLowerCase() === c.hex.toLowerCase();
+                const selected = cabinetColorHex?.toLowerCase() === c.hex.toLowerCase();
                 return (
                   <div
                     key={c.name}
@@ -254,8 +255,7 @@ export default function Sidebar({
             <p className="option-title">Handle Color</p>
             <div id="colors">
               {colors.map((c) => {
-                const selected =
-                  colorHex?.toLowerCase() === c.hex.toLowerCase();
+                const selected = handleColorHex?.toLowerCase() === c.hex.toLowerCase();
                 return (
                   <div
                     key={c.name}
@@ -297,14 +297,25 @@ export default function Sidebar({
             <p className="option-title">Overview</p>
             <ul className="overviewList">
               <li>
-                Color <span>Black</span>
+                Color <span>
+                  {
+                    colors.find((c) => cabinetColorHex?.toLowerCase() === c.hex.toLowerCase())?.name
+                  }
+                </span>
               </li>
               <li>
-                Material <span>Pine</span>
+                Raw Material <span>{rawMaterial}</span>
               </li>
               <li>
-                Handle <span>Yellow</span>
+                Material Top <span>{rawMaterial}</span>
               </li>
+              <li>
+              Handle Color <span>
+                {
+                  colors.find((c) => handleColorHex?.toLowerCase() === c.hex.toLowerCase())?.name
+                }
+              </span>
+            </li>
             </ul>
           </div>
         </>
