@@ -6,8 +6,10 @@ export default function Sidebar({
   setCabinetColorHex,
   handleColorHex,
   setHandleColorHex,
-  rawMaterial,
-  setRawMaterial,
+  cabinetMaterial,
+  setCabinetMaterial,
+  surfaceMaterial,
+  setSurfaceMaterial,
   setApplyScope,
   handlesVisible,
   setHandlesVisible,
@@ -78,7 +80,7 @@ export default function Sidebar({
   function handlePickColor(hex) {
     setApplyScope?.("colorTargets");
     setCabinetColorHex(hex);
-    setRawMaterial(null);
+    setCabinetMaterial(null);
   }
 
   function handlePickHandleColor(hex) {
@@ -86,15 +88,17 @@ export default function Sidebar({
     setHandleColorHex(hex);
   }
 
-  function handlePickRawMaterial(item) {
-    if (currentView === "viewStart") {
-      setApplyScope?.("colorTargets");
-    } else if (currentView === "viewSurface") {
-      setApplyScope?.("surfaceOnly");
-    }
-    setRawMaterial(item.key);
-    setColorHex("");
+function handlePickRawMaterial(item) {
+  if (currentView === "viewStart") {
+    setApplyScope?.("colorTargets");
+    setCabinetMaterial(item.key);
+    setCabinetColorHex(null); 
+  } else if (currentView === "viewSurface") {
+    setApplyScope?.("surfaceOnly");
+    setSurfaceMaterial(item.key);
   }
+}
+
 
   return (
     <div id="sidebar">
@@ -152,7 +156,12 @@ export default function Sidebar({
               style={{ display: "flex", gap: 12, flexWrap: "wrap" }}
             >
               {currentRawList.map((m) => {
-                const selected = rawMaterial === m.key;
+                const selected =
+                  currentView === "viewStart"
+                    ? cabinetMaterial === m.key
+                    : currentView === "viewSurface"
+                    ? surfaceMaterial === m.key
+                    : false;
                 return (
                   <div
                     key={m.key}
@@ -198,7 +207,12 @@ export default function Sidebar({
               style={{ display: "flex", gap: 12, flexWrap: "wrap" }}
             >
               {currentRawList.map((m) => {
-                const selected = rawMaterial === m.key;
+                const selected =
+                currentView === "viewStart"
+                  ? cabinetMaterial === m.key
+                  : currentView === "viewSurface"
+                  ? surfaceMaterial === m.key
+                  : false;
                 return (
                   <div
                     key={m.key}
@@ -312,10 +326,10 @@ export default function Sidebar({
                 </span>
               </li>
               <li>
-                Raw Material <span>{rawMaterial}</span>
+                Cabinet Material <span>{cabinetMaterial}</span>
               </li>
               <li>
-                Material Top <span>{rawMaterial}</span>
+                Surface Material <span>{surfaceMaterial}</span>
               </li>
               <li>
                 Handle Color{" "}
