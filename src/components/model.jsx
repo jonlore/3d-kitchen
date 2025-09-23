@@ -248,6 +248,7 @@ export default function Model() {
   const [rawMaterial, setRawMaterial] = useState(null);
   const [applyScope, setApplyScope] = useState("colorTargets");
   const [handlesVisible, setHandlesVisible] = useState(true);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const [cabinetColorHex, setCabinetColorHex] = useState("#6BAA75");
   const [handleColorHex, setHandleColorHex] = useState("#E6C94C"); // default handle color
@@ -261,11 +262,15 @@ export default function Model() {
         viewBox="0 0 40 40"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
+        onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
         style={{
           position: "absolute",
           top: "60px",
-          right: "530px",
+          right: sidebarCollapsed ? "20px" : "530px",
           zIndex: 1000,
+          cursor: "pointer",
+          transform: sidebarCollapsed ? "rotate(180deg)" : "rotate(0deg)",
+          transition: "transform 0.3s ease, right 0.3s ease",
         }}
       >
         <rect width="40" height="40" rx="20" fill="white" />
@@ -301,17 +306,19 @@ export default function Model() {
         <OrbitControls enableDamping />
       </Canvas>
 
-      <Sidebar
-        cabinetColorHex={cabinetColorHex}
-        setCabinetColorHex={setCabinetColorHex}
-        handleColorHex={handleColorHex}
-        setHandleColorHex={setHandleColorHex}
-        rawMaterial={rawMaterial}
-        setRawMaterial={setRawMaterial}
-        setApplyScope={setApplyScope}
-        handlesVisible={handlesVisible}
-        setHandlesVisible={setHandlesVisible}
-      />
+      {!sidebarCollapsed && (
+        <Sidebar
+          cabinetColorHex={cabinetColorHex}
+          setCabinetColorHex={setCabinetColorHex}
+          handleColorHex={handleColorHex}
+          setHandleColorHex={setHandleColorHex}
+          rawMaterial={rawMaterial}
+          setRawMaterial={setRawMaterial}
+          setApplyScope={setApplyScope}
+          handlesVisible={handlesVisible}
+          setHandlesVisible={setHandlesVisible}
+        />
+      )}
     </div>
   );
 }
