@@ -5,9 +5,6 @@ import * as THREE from "three";
 import Sidebar from "./sidebar";
 import { Trash2, RotateCcw } from "lucide-react";
 
-
-
-
 const TARGET_PARTS = [
   "luckor",
   "luckor001",
@@ -156,14 +153,26 @@ function applyRawMaterialDependingOnScope(
   }
 }
 
-function KitchenModel({ cabinetColorHex, handleColorHex, rawMaterial, applyScope, handlesVisible }) {
+function KitchenModel({
+  cabinetColorHex,
+  handleColorHex,
+  rawMaterial,
+  applyScope,
+  handlesVisible,
+}) {
   const { scene, materials } = useGLTF(
     import.meta.env.BASE_URL + "/models/kitchen3d.glb"
   );
   const handleMeshesRef = useRef([]);
 
-  const cabinetColor = useMemo(() => new THREE.Color(cabinetColorHex), [cabinetColorHex]);
-  const handleColor = useMemo(() => new THREE.Color(handleColorHex), [handleColorHex]);
+  const cabinetColor = useMemo(
+    () => new THREE.Color(cabinetColorHex),
+    [cabinetColorHex]
+  );
+  const handleColor = useMemo(
+    () => new THREE.Color(handleColorHex),
+    [handleColorHex]
+  );
 
   useEffect(() => {
     if (!scene) return;
@@ -190,82 +199,80 @@ function KitchenModel({ cabinetColorHex, handleColorHex, rawMaterial, applyScope
     });
   }, [handlesVisible]);
 
-useEffect(() => {
-  if (!scene || !cabinetColor) return;
-  if (applyScope === "colorTargets") {
-    paintTargets(scene, cabinetColor);
-  }
-}, [scene, cabinetColor, applyScope]);
-
-useEffect(() => {
-  if (!scene) return;
-
-  if (rawMaterial) {
-    applyRawMaterialDependingOnScope(
-      scene,
-      materials,
-      rawMaterial,
-      applyScope
-    );
-  } else if (applyScope === "colorTargets") {
-    paintTargets(scene, cabinetColor);
-  }
-}, [scene, materials, rawMaterial, applyScope, cabinetColor]);
-
+  useEffect(() => {
+    if (!scene || !cabinetColor) return;
+    if (applyScope === "colorTargets") {
+      paintTargets(scene, cabinetColor);
+    }
+  }, [scene, cabinetColor, applyScope]);
 
   useEffect(() => {
-  if (applyScope !== "handleOnly" || !handleColorHex) return;
+    if (!scene) return;
 
-  handleMeshesRef.current.forEach((m) => {
-    if (m.material && !m.userData.__clonedMaterial) {
-      m.material = m.material.clone();
-      m.userData.__clonedMaterial = true;
+    if (rawMaterial) {
+      applyRawMaterialDependingOnScope(
+        scene,
+        materials,
+        rawMaterial,
+        applyScope
+      );
+    } else if (applyScope === "colorTargets") {
+      paintTargets(scene, cabinetColor);
     }
-    if (!(m.material instanceof THREE.MeshStandardMaterial)) {
-      m.material = new THREE.MeshStandardMaterial({
-        metalness: 0.6,
-        roughness: 0.4,
-      });
-    }
-    m.material.color.set(handleColor);
-    m.material.needsUpdate = true;
-  });
+  }, [scene, materials, rawMaterial, applyScope, cabinetColor]);
+
+  useEffect(() => {
+    if (applyScope !== "handleOnly" || !handleColorHex) return;
+
+    handleMeshesRef.current.forEach((m) => {
+      if (m.material && !m.userData.__clonedMaterial) {
+        m.material = m.material.clone();
+        m.userData.__clonedMaterial = true;
+      }
+      if (!(m.material instanceof THREE.MeshStandardMaterial)) {
+        m.material = new THREE.MeshStandardMaterial({
+          metalness: 0.6,
+          roughness: 0.4,
+        });
+      }
+      m.material.color.set(handleColor);
+      m.material.needsUpdate = true;
+    });
   }, [applyScope, handleColorHex, handleColor]);
-
 
   return <primitive object={scene} />;
 }
-
 
 export default function Model() {
   const [colorHex, setColorHex] = useState("#6BAA75");
   const [rawMaterial, setRawMaterial] = useState(null);
   const [applyScope, setApplyScope] = useState("colorTargets");
-  const [handlesVisible, setHandlesVisible] = useState(true); 
+  const [handlesVisible, setHandlesVisible] = useState(true);
 
   const [cabinetColorHex, setCabinetColorHex] = useState("#6BAA75");
   const [handleColorHex, setHandleColorHex] = useState("#E6C94C"); // default handle color
 
-
   return (
     <div id="configurator-model">
       <div id="model-options">
-        <button className="restart" onClick={() => alert("go back")}>
+        <button className="restart" onClick={() => window.location.reload()}>
           <RotateCcw size={16} />
         </button>
 
-        <button className="restart" onClick={() => alert("restart")}>
+        <button className="restart" onClick={() => window.location.reload()}>
           <Trash2 size={16} />
         </button>
       </div>
 
-      <Canvas camera={{ position: [0, 4, 9], fov: 70 }} style={{ background: '#d4e5fdff' }} >
+      <Canvas
+        camera={{ position: [0, 4, 9], fov: 70 }}
+        style={{ background: "#d4e5fdff" }}
+      >
         <ambientLight intensity={0.5} />
         <directionalLight position={[-16, 5, 16]} intensity={1.2} castShadow />
         <KitchenModel
           cabinetColorHex={cabinetColorHex}
           handleColorHex={handleColorHex}
-
           rawMaterial={rawMaterial}
           applyScope={applyScope}
           handlesVisible={handlesVisible}
@@ -278,14 +285,12 @@ export default function Model() {
         setCabinetColorHex={setCabinetColorHex}
         handleColorHex={handleColorHex}
         setHandleColorHex={setHandleColorHex}
-
         rawMaterial={rawMaterial}
         setRawMaterial={setRawMaterial}
         setApplyScope={setApplyScope}
         handlesVisible={handlesVisible}
         setHandlesVisible={setHandlesVisible}
       />
-
     </div>
   );
 }
