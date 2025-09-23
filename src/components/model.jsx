@@ -291,11 +291,7 @@ export default function Model() {
       </svg>
 
       <div id="model-options">
-        <button className="restart" onClick={() => alert("go back")}>
-          <RotateCcw size={16} />
-        </button>
-
-        <button className="restart" onClick={() => alert("restart")}>
+        <button className="restart" onClick={() => window.location.reload()}>
           <Trash2 size={16} />
         </button>
       </div>
