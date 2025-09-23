@@ -86,7 +86,7 @@ export default function Sidebar({
   function handlePickHandleColor(hex) {
     setApplyScope?.("handleOnly");
     setHandleColorHex(hex);
-  } 
+  }
 
 function handlePickRawMaterial(item) {
   if (currentView === "viewStart") {
@@ -102,7 +102,9 @@ function handlePickRawMaterial(item) {
 
   return (
     <div id="sidebar">
-      <header>
+      <header
+        style={{ display: "flex", alignItems: "center", position: "relative" }}
+      >
         <h1>Start design your dream kitchen!</h1>
       </header>
 
@@ -112,7 +114,8 @@ function handlePickRawMaterial(item) {
             <p className="option-title">Painted</p>
             <div id="colors">
               {colors.map((c) => {
-                const selected = cabinetColorHex?.toLowerCase() === c.hex.toLowerCase();
+                const selected =
+                  cabinetColorHex?.toLowerCase() === c.hex.toLowerCase();
                 return (
                   <div
                     key={c.name}
@@ -269,7 +272,8 @@ function handlePickRawMaterial(item) {
             <p className="option-title">Handle Color</p>
             <div id="colors">
               {colors.map((c) => {
-                const selected = handleColorHex?.toLowerCase() === c.hex.toLowerCase();
+                const selected =
+                  handleColorHex?.toLowerCase() === c.hex.toLowerCase();
                 return (
                   <div
                     key={c.name}
@@ -311,9 +315,13 @@ function handlePickRawMaterial(item) {
             <p className="option-title">Overview</p>
             <ul className="overviewList">
               <li>
-                Color <span>
+                Color{" "}
+                <span>
                   {
-                    colors.find((c) => cabinetColorHex?.toLowerCase() === c.hex.toLowerCase())?.name
+                    colors.find(
+                      (c) =>
+                        cabinetColorHex?.toLowerCase() === c.hex.toLowerCase()
+                    )?.name
                   }
                 </span>
               </li>
@@ -324,12 +332,16 @@ function handlePickRawMaterial(item) {
                 Surface Material <span>{surfaceMaterial}</span>
               </li>
               <li>
-              Handle Color <span>
-                {
-                  colors.find((c) => handleColorHex?.toLowerCase() === c.hex.toLowerCase())?.name
-                }
-              </span>
-            </li>
+                Handle Color{" "}
+                <span>
+                  {
+                    colors.find(
+                      (c) =>
+                        handleColorHex?.toLowerCase() === c.hex.toLowerCase()
+                    )?.name
+                  }
+                </span>
+              </li>
             </ul>
           </div>
         </>
