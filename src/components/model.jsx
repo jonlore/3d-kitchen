@@ -156,7 +156,7 @@ function applyRawMaterialDependingOnScope(
   }
 }
 
-function KitchenModel({ cabinetColorHex, handleColorHex, rawMaterial, applyScope, handlesVisible }) {
+function KitchenModel({ cabinetColorHex, handleColorHex, cabinetMaterial, surfaceMaterial, applyScope, handlesVisible }) {
   const { scene, materials } = useGLTF(
     import.meta.env.BASE_URL + "/models/kitchen3d.glb"
   );
@@ -165,30 +165,30 @@ function KitchenModel({ cabinetColorHex, handleColorHex, rawMaterial, applyScope
   const cabinetColor = useMemo(() => new THREE.Color(cabinetColorHex), [cabinetColorHex]);
   const handleColor = useMemo(() => new THREE.Color(handleColorHex), [handleColorHex]);
 
-  useEffect(() => {
-    if (!scene) return;
-    const out = [];
-    scene.traverse((obj) => {
-      if (obj.isMesh && obj.name && looksLikeHandle(obj.name)) {
-        out.push(obj);
-      }
-    });
-    handleMeshesRef.current = out;
-  }, [scene]);
+useEffect(() => {
+  if (!scene) return;
+  const out = [];
+  scene.traverse((obj) => {
+    if (obj.isMesh && obj.name && looksLikeHandle(obj.name)) {
+      out.push(obj);
+    }
+  });
+  handleMeshesRef.current = out;
+}, [scene]);
 
-  // Show/hide handles
-  useEffect(() => {
-    handleMeshesRef.current.forEach((m) => {
-      m.visible = !!handlesVisible;
-      if (!m.material) {
-        m.material = new THREE.MeshStandardMaterial({
-          color: 0x333333,
-          metalness: 0.6,
-          roughness: 0.4,
-        });
-      }
-    });
-  }, [handlesVisible]);
+// Show/hide handles
+useEffect(() => {
+  handleMeshesRef.current.forEach((m) => {
+    m.visible = !!handlesVisible;
+    if (!m.material) {
+      m.material = new THREE.MeshStandardMaterial({
+        color: 0x333333,
+        metalness: 0.6,
+        roughness: 0.4,
+      });
+    }
+  });
+}, [handlesVisible]);
 
 useEffect(() => {
   if (!scene || !cabinetColor) return;
@@ -197,20 +197,30 @@ useEffect(() => {
   }
 }, [scene, cabinetColor, applyScope]);
 
+
 useEffect(() => {
   if (!scene) return;
 
-  if (rawMaterial) {
+  if (applyScope === "colorTargets" && cabinetMaterial) {
     applyRawMaterialDependingOnScope(
       scene,
       materials,
-      rawMaterial,
-      applyScope
+      cabinetMaterial,
+      "colorTargets"
+    );
+  } else if (applyScope === "surfaceOnly" && surfaceMaterial) {
+    applyRawMaterialDependingOnScope(
+      scene,
+      materials,
+      surfaceMaterial,
+      "surfaceOnly"
     );
   } else if (applyScope === "colorTargets") {
     paintTargets(scene, cabinetColor);
   }
-}, [scene, materials, rawMaterial, applyScope, cabinetColor]);
+}, [scene, materials, cabinetMaterial, surfaceMaterial, applyScope, cabinetColor]);
+
+
 
 
   useEffect(() => {
@@ -239,7 +249,11 @@ useEffect(() => {
 
 export default function Model() {
   const [colorHex, setColorHex] = useState("#6BAA75");
-  const [rawMaterial, setRawMaterial] = useState(null);
+  //const [rawMaterial, setRawMaterial] = useState(null);
+
+  const [cabinetMaterial, setCabinetMaterial] = useState(null);
+  const [surfaceMaterial, setSurfaceMaterial] = useState(null);
+
   const [applyScope, setApplyScope] = useState("colorTargets");
   const [handlesVisible, setHandlesVisible] = useState(true); 
 
@@ -266,7 +280,9 @@ export default function Model() {
           cabinetColorHex={cabinetColorHex}
           handleColorHex={handleColorHex}
 
-          rawMaterial={rawMaterial}
+          cabinetMaterial={cabinetMaterial}
+          surfaceMaterial={surfaceMaterial}
+          
           applyScope={applyScope}
           handlesVisible={handlesVisible}
         />
@@ -279,8 +295,11 @@ export default function Model() {
         handleColorHex={handleColorHex}
         setHandleColorHex={setHandleColorHex}
 
-        rawMaterial={rawMaterial}
-        setRawMaterial={setRawMaterial}
+        cabinetMaterial={cabinetMaterial}
+        setCabinetMaterial={setCabinetMaterial}
+        surfaceMaterial={surfaceMaterial}
+        setSurfaceMaterial={setSurfaceMaterial}
+  
         setApplyScope={setApplyScope}
         handlesVisible={handlesVisible}
         setHandlesVisible={setHandlesVisible}
