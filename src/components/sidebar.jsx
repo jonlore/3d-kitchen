@@ -88,17 +88,16 @@ export default function Sidebar({
     setHandleColorHex(hex);
   }
 
-function handlePickRawMaterial(item) {
-  if (currentView === "viewStart") {
-    setApplyScope?.("colorTargets");
-    setCabinetMaterial(item.key);
-    setCabinetColorHex(null); 
-  } else if (currentView === "viewSurface") {
-    setApplyScope?.("surfaceOnly");
-    setSurfaceMaterial(item.key);
+  function handlePickRawMaterial(item) {
+    if (currentView === "viewStart") {
+      setApplyScope?.("colorTargets");
+      setCabinetMaterial(item.key);
+      setCabinetColorHex(null);
+    } else if (currentView === "viewSurface") {
+      setApplyScope?.("surfaceOnly");
+      setSurfaceMaterial(item.key);
+    }
   }
-}
-
 
   return (
     <div id="sidebar">
@@ -208,11 +207,11 @@ function handlePickRawMaterial(item) {
             >
               {currentRawList.map((m) => {
                 const selected =
-                currentView === "viewStart"
-                  ? cabinetMaterial === m.key
-                  : currentView === "viewSurface"
-                  ? surfaceMaterial === m.key
-                  : false;
+                  currentView === "viewStart"
+                    ? cabinetMaterial === m.key
+                    : currentView === "viewSurface"
+                    ? surfaceMaterial === m.key
+                    : false;
                 return (
                   <div
                     key={m.key}
@@ -254,18 +253,75 @@ function handlePickRawMaterial(item) {
           <div className="options-container" id="handle-options">
             <p className="option-title">Handle type</p>
 
-            <label
-              htmlFor="toggle-handles"
-              style={{ display: "inline-flex", alignItems: "center", gap: 8 }}
-            >
-              <input
-                id="toggle-handles"
-                type="checkbox"
-                checked={!!handlesVisible}
-                onChange={(e) => setHandlesVisible?.(e.target.checked)}
-              />
-              Show handles
-            </label>
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                }}
+              >
+                <button
+                  onClick={() => setHandlesVisible?.(true)}
+                  title="With handles"
+                  aria-label="With handles"
+                  className="circle-option"
+                  style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: "50%",
+                    border: handlesVisible
+                      ? "2px solid #111"
+                      : "1px solid #d1d5db",
+                    background: "#22c55e",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "white",
+                    fontSize: "18px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  ✓
+                </button>
+                <span>With handles</span>
+              </div>
+
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                }}
+              >
+                <button
+                  onClick={() => setHandlesVisible?.(false)}
+                  title="Without handles"
+                  aria-label="Without handles"
+                  className="circle-option"
+                  style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: "50%",
+                    border: !handlesVisible
+                      ? "2px solid #111"
+                      : "1px solid #d1d5db",
+                    background: "#ef4444",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "white",
+                    fontSize: "18px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  ✕
+                </button>
+                <span>Without handles</span>
+              </div>
+            </div>
           </div>
 
           <div className="options-container" id="color-options">
