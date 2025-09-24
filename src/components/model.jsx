@@ -276,7 +276,7 @@ export default function Model() {
         style={{
           position: "absolute",
           top: "60px",
-          right: sidebarCollapsed ? "20px" : "530px",
+          right: sidebarCollapsed ? "20px" : "400px",
           zIndex: 1000,
           cursor: "pointer",
           transform: sidebarCollapsed ? "rotate(180deg)" : "rotate(0deg)",

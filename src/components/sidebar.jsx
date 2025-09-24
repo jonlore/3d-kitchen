@@ -111,7 +111,7 @@ function handlePickRawMaterial(item) {
       {currentView === "viewStart" && (
         <>
           <div className="options-container" id="color-options">
-            <p className="option-title">Painted</p>
+            <p className="option-title">Pick a painted finish to define your kitchen's style</p>
             <div id="colors">
               {colors.map((c) => {
                 const selected =
@@ -150,7 +150,7 @@ function handlePickRawMaterial(item) {
           </div>
 
           <div className="options-container" id="raw-material-options">
-            <p className="option-title">Raw Material</p>
+            <p className="option-title">Pick the wood type that best suits your style</p>
             <div
               id="materials"
               style={{ display: "flex", gap: 12, flexWrap: "wrap" }}
@@ -201,7 +201,7 @@ function handlePickRawMaterial(item) {
       {currentView === "viewSurface" && (
         <>
           <div className="options-container" id="surface-raw-materials">
-            <p className="option-title">Material</p>
+            <p className="option-title">Select the material for your countertop</p>
             <div
               id="materials"
               style={{ display: "flex", gap: 12, flexWrap: "wrap" }}
@@ -269,7 +269,7 @@ function handlePickRawMaterial(item) {
           </div>
 
           <div className="options-container" id="color-options">
-            <p className="option-title">Handle Color</p>
+            <p className="option-title">Select the color of your handles</p>
             <div id="colors">
               {colors.map((c) => {
                 const selected =
@@ -315,7 +315,7 @@ function handlePickRawMaterial(item) {
             <p className="option-title">Overview</p>
             <ul className="overviewList">
               <li>
-                Color{" "}
+                Color
                 <span>
                   {
                     colors.find(
@@ -348,32 +348,35 @@ function handlePickRawMaterial(item) {
       )}
 
       <div className="sidebar-navigation">
-        {currentViewIndex > 0 ? (
-          <button
-            className="prev-button"
-            onClick={() => setCurrentViewIndex((prev) => Math.max(prev - 1, 0))}
-          >
-            <ArrowLeft size={16} />
-            <span>Prev</span>
-          </button>
-        ) : (
-          <div style={{ width: "80px" }} />
-        )}
+  {currentViewIndex > 0 ? (
+    <button
+      className="prev-button"
+      onClick={() => setCurrentViewIndex((prev) => Math.max(prev - 1, 0))}
+    >
+      <ArrowLeft size={16} />
+      <span>Prev</span>
+    </button>
+  ) : (
+    <div style={{ width: "80px" }} />
+  )}
 
-        <div className="view-progress">
-          {currentViewIndex + 1} / {views.length}
-        </div>
+  <div className="view-progress">
+    {currentViewIndex + 1} / {views.length}
+  </div>
 
-        <button
-          className="next-button"
-          onClick={() =>
-            setCurrentViewIndex((prev) => Math.min(prev + 1, views.length - 1))
-          }
-          disabled={currentViewIndex === views.length - 1}
-        >
-          <span>Next</span>
-          <ArrowRight size={16} />
-        </button>
+  <button
+    className="next-button"
+    onClick={() => {
+      if (currentViewIndex === views.length - 1) {
+        console.log("Proceeding to checkout...");
+      } else {
+        setCurrentViewIndex((prev) => Math.min(prev + 1, views.length - 1));
+      }
+    }}
+  >
+    <span>{currentViewIndex === views.length - 1 ? "Checkout" : "Next"}</span>
+    <ArrowRight size={16} />
+  </button>
       </div>
     </div>
   );
