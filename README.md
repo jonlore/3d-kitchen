@@ -1,12 +1,40 @@
-# React + Vite
+# 3D Kitchen
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A web-based application for designing and visualizing kitchen layouts in 3D.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Interactive 3D kitchen modeling
+- Customizable cabinets, appliances, and surfaces
+- Real-time rendering and previews
+- Save and load kitchen designs
 
-## Expanding the ESLint configuration
+## Technologies
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- React
+- Three.js
+- Node.js
+
+## Getting Started
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/3d-kitchen.git
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the development server:
+   ```bash
+   npm start
+   ```
+
+## Usage
+
+- Open your browser and navigate to `http://localhost:3000`
+- Begin designing your kitchen in the interactive 3D workspace
+
+## License
+
+[MIT](LICENSE)
